@@ -6,56 +6,24 @@
 <title>Margins Opening Titles</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400..900&family=Courier+Prime&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;900&display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=Noto+Serif+TC:wght@400;900&display=block" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0b0908;
-    --fg: #ece2cc;
-    --muted: #8d8270;
-    --red: #b8231a;
-    --red-hot: #d8321f;
-    --chip: rgba(236, 226, 204, 0.08);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) { --bg: #0b0908; --fg: #ece2cc; }
-  }
-  :root[data-theme="dark"] { --bg: #0b0908; --fg: #ece2cc; }
+  :root { --bg: #ebe3d3; --fg: #2b241f; --muted: #8a7f70; --red: #a8261c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #ebe3d3; --fg: #2b241f; } }
+  :root[data-theme="dark"] { --bg: #ebe3d3; --fg: #2b241f; }
   * { box-sizing: border-box; }
-  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); overflow: hidden; }
-  body { font-family: "Courier Prime", ui-monospace, monospace; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); overflow: hidden; font-family: "EB Garamond", Georgia, serif; }
   #stage { position: fixed; inset: 0; display: grid; place-items: center; }
-  canvas { display: block; width: min(100vw, calc(100vh * 16 / 9)); height: auto; aspect-ratio: 16 / 9; background: #000; }
-  #overlay {
-    position: fixed; inset: 0; display: grid; place-items: center; text-align: center;
-    background: radial-gradient(ellipse at center, rgba(11,9,8,0.35), rgba(11,9,8,0.85));
-    cursor: pointer; transition: opacity .5s;
-  }
+  canvas { display: block; width: min(100vw, calc(100vh * 16 / 9)); height: auto; aspect-ratio: 16 / 9; }
+  #overlay { position: fixed; inset: 0; display: grid; place-items: center; text-align: center; background: rgba(235,227,211,.55); cursor: pointer; transition: opacity .6s; }
   #overlay.hidden { opacity: 0; pointer-events: none; }
-  .seal {
-    width: 132px; height: 132px; margin: 0 auto 22px; background: var(--red);
-    display: grid; grid-template-columns: 1fr 1fr; place-items: center; padding: 14px;
-    font-family: "Noto Serif TC", serif; font-weight: 900; font-size: 48px; color: #f3e9d6;
-    border-radius: 3px; box-shadow: 0 0 0 1px rgba(0,0,0,.4) inset; transform: rotate(-2deg);
-    transition: transform .25s;
-  }
-  #overlay:hover .seal { transform: rotate(0deg) scale(1.04); }
-  .seal span { line-height: 1; }
-  .play-label { letter-spacing: .32em; font-size: 14px; color: var(--fg); }
-  .play-sub { margin-top: 8px; font-size: 12px; letter-spacing: .18em; color: var(--muted); }
-  #controls {
-    position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%);
-    display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; align-items: center;
-    max-width: calc(100vw - 32px); padding: 8px 10px; border-radius: 6px;
-    background: rgba(11,9,8,.72); backdrop-filter: blur(6px);
-    opacity: 0; transition: opacity .4s; font-size: 12px; letter-spacing: .12em;
-  }
+  .play { font-size: 22px; letter-spacing: .2em; color: var(--fg); }
+  .play small { display: block; margin-top: 10px; font-size: 15px; letter-spacing: .08em; color: var(--muted); }
+  #controls { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;
+    max-width: calc(100vw - 32px); opacity: 0; transition: opacity .4s; }
   body:hover #controls, #controls:focus-within { opacity: 1; }
-  #controls button {
-    font: inherit; color: var(--fg); background: var(--chip); border: 1px solid rgba(236,226,204,.15);
-    padding: 6px 10px; border-radius: 4px; cursor: pointer; letter-spacing: inherit;
-  }
-  #controls button:hover { border-color: var(--red-hot); color: #fff; }
-  #time { min-width: 64px; text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+  #controls button { font: inherit; font-size: 15px; color: var(--fg); background: rgba(255,255,255,.5); border: 1px solid rgba(43,36,31,.15); padding: 5px 12px; border-radius: 3px; cursor: pointer; }
+  #controls button:hover { border-color: var(--red); }
   body.render #overlay, body.render #controls { display: none; }
   body.render canvas { width: 1920px; height: 1080px; }
   body.render #stage { place-items: start; }
@@ -63,43 +31,21 @@
 </head>
 <body>
 <div id="stage"><canvas id="c" width="1920" height="1080"></canvas></div>
-<div id="overlay" role="button" tabindex="0" aria-label="Play the opening sequence with sound">
-  <div>
-    <div class="seal"><span>播</span><span>邊</span><span>放</span><span>緣</span></div>
-    <div class="play-label">PLAY WITH SOUND</div>
-    <div class="play-sub" id="loading">LOADING TYPE…</div>
-  </div>
-</div>
+<div id="overlay" role="button" tabindex="0" aria-label="Play with sound"><div class="play">Play<small>with sound</small></div></div>
 <div id="controls">
-  <button data-t="0">LEADER</button>
-  <button data-t="4.5">THE DRAFT</button>
-  <button data-t="13.6">SHANGHAI 1925</button>
-  <button data-t="20.4">SHANGHAI 2026</button>
-  <button data-t="25.6">TITLE</button>
-  <button id="pause">PAUSE</button>
-  <span id="time">00.0</span>
+  <button data-t="0">Thread</button>
+  <button data-t="9">Shanghai</button>
+  <button data-t="19">Title</button>
+  <button id="pause">Pause</button>
 </div>
 <script>
 'use strict';
-/* =====================================================================
-   MARGINS — opening title sequence
-   Everything here is procedural: picture is drawn to a 1920×1080 canvas
-   as a pure function of time, and the score is synthesized with Web Audio
-   on the same clock, so the piece can be played live or rendered offline.
-   ===================================================================== */
-const W = 1920, H = 1080, FPS = 24, DUR = 50;
-const COL = {
-  paper: '#ebe1cb', ink: '#17120f', red: '#b8231a', redHot: '#d8321f',
-  chalk: '#56606c', neon: '#ff3b2a', neonCore: '#ffd9cc',
-};
-const FONT = {
-  bodoni: '"Bodoni Moda", "Didot", serif',
-  mono: '"Courier Prime", "Noto Serif TC", monospace',
-  brush: '"Ma Shan Zheng", "Noto Serif TC", serif',
-  serifTC: '"Noto Serif TC", serif',
-};
+/* MARGINS — opening titles. Picture is a pure function of time on a 1920×1080 canvas;
+   the score is synthesized with Web Audio on the same clock. */
+const W = 1920, H = 1080, FPS = 24, DUR = 32;
+const COL = { paper: '#ebe3d3', ink: '#2b241f', red: '#a8261c', thread: '#a3241b' };
+const SERIF = '"EB Garamond", Georgia, serif', TC = '"Noto Serif TC", serif';
 
-/* ---------- tiny math kit ---------- */
 function mulberry(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 function hash(n) { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
 const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
@@ -107,1058 +53,352 @@ const lerp = (a, b, t) => a + (b - a) * t;
 const prog = (t, a, b) => clamp((t - a) / (b - a));
 const eio = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 const eout = t => 1 - Math.pow(1 - t, 3);
-const ein = t => t * t * t;
-const eback = t => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); };
 function mk(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
-function cam(g, cx, cy, s, tx = 0, ty = 0) { g.translate(cx + tx, cy + ty); g.scale(s, s); g.translate(-cx, -cy); }
 
-/* ---------- polyline helpers (for stitches + neon draw-on) ---------- */
+/* ---------- timeline ---------- */
+const T = {
+  sew: [1.2, 6.6], placket: [6.6, 7.6], frogs: [7.9, 8.15, 8.4], draftOut: [8.8, 10.0],
+  bundIn: [9.6, 12.0], bundOut: [14.8, 15.8], pudongIn: [16.0, 17.6], cityOut: [18.4, 19.6],
+  letters: 19.8, seal: 24.6, cn: 25.9, url: 26.9, end: [29.6, 31.6],
+};
+
+/* ---------- polylines: the stitched qipao ---------- */
 function samplePath(start, segs) {
   const pts = [start.slice()]; let p = start;
   for (const s of segs) {
     if (s.length === 1) { pts.push(s[0].slice()); p = s[0]; continue; }
     const [c1, c2, e] = s;
-    for (let i = 1; i <= 24; i++) {
-      const u = i / 24, v = 1 - u;
-      pts.push([v * v * v * p[0] + 3 * v * v * u * c1[0] + 3 * v * u * u * c2[0] + u * u * u * e[0],
-                v * v * v * p[1] + 3 * v * v * u * c1[1] + 3 * v * u * u * c2[1] + u * u * u * e[1]]);
-    }
+    for (let i = 1; i <= 24; i++) { const u = i / 24, v = 1 - u;
+      pts.push([v*v*v*p[0] + 3*v*v*u*c1[0] + 3*v*u*u*c2[0] + u*u*u*e[0], v*v*v*p[1] + 3*v*v*u*c1[1] + 3*v*u*u*c2[1] + u*u*u*e[1]]); }
     p = e;
   }
   return pts;
 }
-function resample(pts, step = 2) {
+const STEP = 2;
+function resample(pts) {
   const out = [pts[0].slice()]; let carry = 0;
   for (let i = 1; i < pts.length; i++) {
-    const a = pts[i - 1], b = pts[i]; const d = Math.hypot(b[0] - a[0], b[1] - a[1]);
-    let pos = step - carry;
-    while (pos <= d) { const u = pos / d; out.push([a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u]); pos += step; }
-    carry = d - (pos - step);
+    const a = pts[i - 1], b = pts[i], d = Math.hypot(b[0] - a[0], b[1] - a[1]); let pos = STEP - carry;
+    while (pos <= d) { const u = pos / d; out.push([a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u]); pos += STEP; }
+    carry = d - (pos - STEP);
   }
-  out.push(pts[pts.length - 1].slice());
   return out;
 }
-const STEP = 2;
-// stitched line: 13px on, 7px off, drawn up to length len
-function strokeStitches(g, pts, len, width = 3.6) {
-  const n = Math.min(pts.length, Math.floor(len / STEP));
-  if (n < 2) return;
-  const path = () => {
-    g.beginPath(); let pen = false;
-    for (let i = 1; i < n; i++) {
-      const on = ((i * STEP) % 20) < 13;
-      if (on) { if (!pen) { g.moveTo(pts[i - 1][0], pts[i - 1][1]); pen = true; } g.lineTo(pts[i][0], pts[i][1]); }
-      else pen = false;
-    }
-  };
-  g.save(); g.lineCap = 'round';
-  g.translate(1.6, 1.8); g.strokeStyle = 'rgba(40,10,5,.18)'; g.lineWidth = width; path(); g.stroke();
-  g.translate(-1.6, -1.8); g.strokeStyle = '#9e1b13'; g.lineWidth = width; path(); g.stroke();
-  g.translate(-.6, -.7); g.strokeStyle = 'rgba(240,110,80,.55)'; g.lineWidth = width * .35; path(); g.stroke();
-  g.restore();
-}
-function strokePartial(g, pts, len) {
-  const n = Math.min(pts.length, Math.floor(len / STEP));
-  if (n < 2) return;
-  g.beginPath(); g.moveTo(pts[0][0], pts[0][1]);
-  for (let i = 1; i < n; i++) g.lineTo(pts[i][0], pts[i][1]);
-}
-
-/* ---------- the qipao pattern (local coords, collar top center = 0,0) ---------- */
-const QIPAO_RIGHT = samplePath([0, 0], [
-  [[40, 2]], [[42, 48]],
-  [[80, 56], [118, 68], [150, 86]],
-  [[176, 100], [196, 124], [206, 150]],
-  [[172, 186]],
-  [[166, 206], [163, 228], [161, 252]],
-  [[159, 300], [132, 330], [128, 362]],
-  [[126, 400], [168, 432], [166, 472]],
-  [[163, 540], [156, 600], [151, 642]],
-  [[146, 788]],
-  [[100, 791], [40, 793], [0, 793]],
-]);
-const QIPAO = resample(QIPAO_RIGHT.concat(QIPAO_RIGHT.slice(0, -1).reverse().map(p => [-p[0], p[1]])), STEP);
-const PLACKET = resample(samplePath([-2, 48], [[[-50, 70], [-110, 94], [-152, 112]], [[-162, 140], [-166, 175], [-167, 205]]]), STEP);
+const RIGHT = samplePath([0, 0], [[[40, 2]], [[42, 48]], [[80, 56], [118, 68], [150, 86]], [[176, 100], [196, 124], [206, 150]], [[172, 186]],
+  [[166, 206], [163, 228], [161, 252]], [[159, 300], [132, 330], [128, 362]], [[126, 400], [168, 432], [166, 472]],
+  [[163, 540], [156, 600], [151, 642]], [[146, 788]], [[100, 791], [40, 793], [0, 793]]]);
+const Q = { x: 960, y: 170, s: .92 };
+const place = p => [Q.x + p[0] * Q.s, Q.y + p[1] * Q.s];
+const QIPAO = resample(RIGHT.concat(RIGHT.slice(0, -1).reverse().map(p => [-p[0], p[1]])).map(place));
+const PLACKET = resample(samplePath([-2, 48], [[[-50, 70], [-110, 94], [-152, 112]], [[-162, 140], [-166, 175], [-167, 205]]]).map(place));
+const FROGS = [[0, 26], [-70, 81], [-140, 107]].map(place);
 const QIPAO_LEN = QIPAO.length * STEP, PLACKET_LEN = PLACKET.length * STEP;
-const FROGS = [[0, 26], [-62, 77], [-128, 103], [-163, 150], [-166, 192]];
 
-/* ---------- timeline ---------- */
-const T = {
-  leaderEnd: 4.5,
-  sew: [6.0, 10.4], placket: [10.5, 11.6], frogs: [11.75, 12.0, 12.25, 12.5, 12.75], miniSeal: 12.95,
-  wipe: [13.3, 13.8],
-  burn: [20.2, 20.85, 21.5], year: [20.3, 21.4], powerOff: 25.2,
-  title: 25.6,
-  slams: [26.4, 26.85, 27.28, 27.68, 28.04, 28.38, 28.72],
-  under: [29.4, 30.8], approach: [31.2, 34.0], impact: 34.0,
-  cn: 36.2, en: 37.6, url: 40.0, runout: 46.5,
-};
-const CN_LINE = '一部關於旗袍的紀錄片';
-const EN_LINE = 'A DOCUMENTARY ON THE QIPAO & NEO-CHINESE DRESS';
-const stitchTimes = (len, t0, t1) => { const a = []; for (let k = 1; k <= Math.floor(len / 20); k++) a.push(t0 + (k * 20 / len) * (t1 - t0)); return a; };
+function stitches(g, pts, len, width = 3) {
+  const n = Math.min(pts.length, Math.floor(len / STEP)); if (n < 2) return;
+  g.save(); g.lineCap = 'round'; g.strokeStyle = COL.thread; g.lineWidth = width; g.beginPath(); let pen = false;
+  for (let i = 1; i < n; i++) {
+    if (((i * STEP) % 18) < 12) { if (!pen) { g.moveTo(pts[i - 1][0], pts[i - 1][1]); pen = true; } g.lineTo(pts[i][0], pts[i][1]); } else pen = false;
+  }
+  g.stroke(); g.restore();
+}
+function frog(g, x, y, a) {
+  if (a <= 0) return;
+  g.save(); g.translate(x, y); g.globalAlpha = a; g.strokeStyle = COL.thread; g.fillStyle = COL.thread; g.lineWidth = 2.2; g.lineCap = 'round';
+  for (const s of [-1, 1]) { g.beginPath(); for (let k = 0; k < Math.PI * 4; k += .2) { const r = 1 + k * .55; g.lineTo(s * 13 + Math.cos(k) * r * s, Math.sin(k) * r); } g.stroke(); }
+  g.beginPath(); g.moveTo(-6, 0); g.lineTo(6, 0); g.stroke(); g.beginPath(); g.arc(0, 0, 3, 0, 7); g.fill(); g.restore();
+}
 
-/* =====================================================================
-   PRE-RENDERED ASSETS
-   ===================================================================== */
+/* ---------- Shanghai silhouettes ---------- */
+const GY = 760;
+const BUND = [
+  { x: 150, w: 110, h: 120, top: 'flat' }, { x: 256, w: 84, h: 160, top: 'cupola' }, { x: 336, w: 130, h: 140, top: 'flat' },
+  { x: 462, w: 120, h: 200, top: 'stepped' }, { x: 578, w: 96, h: 270, top: 'chinese' }, { x: 670, w: 130, h: 230, top: 'pyramid' },
+  { x: 796, w: 104, h: 150, top: 'flat' }, { x: 896, w: 140, h: 195, top: 'clock' }, { x: 1032, w: 190, h: 165, top: 'dome' },
+  { x: 1218, w: 110, h: 135, top: 'flat' }, { x: 1324, w: 88, h: 185, top: 'cupola' }, { x: 1408, w: 150, h: 130, top: 'flat' },
+  { x: 1554, w: 104, h: 165, top: 'stepped' }, { x: 1654, w: 120, h: 115, top: 'flat' },
+];
+function bundPath(g, b) {
+  const { x, w, h } = b, y = GY, cx = x + w / 2;
+  g.rect(x, y - h, w, h); g.rect(x - 3, y - h - 5, w + 6, 6);
+  switch (b.top) {
+    case 'clock': g.rect(cx - 24, y - h - 110, 48, 110); g.moveTo(cx - 24, y - h - 110); g.lineTo(cx, y - h - 146); g.lineTo(cx + 24, y - h - 110); g.closePath(); break;
+    case 'pyramid': g.moveTo(x + 10, y - h - 4); g.lineTo(cx, y - h - 76); g.lineTo(x + w - 10, y - h - 4); g.closePath(); break;
+    case 'dome': { const r = w * .19; g.rect(cx - r * 1.2, y - h - 24, r * 2.4, 22); g.moveTo(cx - r, y - h - 22); g.arc(cx, y - h - 22, r, Math.PI, 0); g.closePath(); g.rect(cx - 5, y - h - 22 - r - 14, 10, 16); break; }
+    case 'chinese': g.moveTo(x - 14, y - h - 2); g.quadraticCurveTo(x, y - h - 6, x + 10, y - h - 26); g.lineTo(x + w - 10, y - h - 26);
+      g.quadraticCurveTo(x + w, y - h - 6, x + w + 14, y - h - 2); g.closePath(); g.moveTo(x + 14, y - h - 24); g.lineTo(cx - 12, y - h - 52); g.lineTo(cx + 12, y - h - 52); g.lineTo(x + w - 14, y - h - 24); g.closePath(); break;
+    case 'stepped': for (let i = 1; i <= 3; i++) g.rect(x + i * 14, y - h - i * 28, w - i * 28, 30); break;
+    case 'cupola': g.rect(cx - 18, y - h - 24, 36, 22); g.moveTo(cx - 20, y - h - 24); g.arc(cx, y - h - 24, 20, Math.PI, 0); g.closePath(); break;
+  }
+}
+function pudongPath(g) {
+  [[150, 70, 150], [226, 60, 210], [292, 90, 170], [470, 70, 240], [546, 64, 300], [820, 76, 260], [900, 60, 330], [1090, 64, 290],
+   [1250, 60, 340], [1470, 70, 300], [1560, 80, 230], [1648, 70, 270], [1724, 56, 180]].forEach(([x, w, h]) => g.rect(x, GY - h, w, h));
+  { const cx = 700; // Oriental Pearl
+    g.moveTo(cx + 50, GY - 180); g.arc(cx, GY - 180, 50, 0, 7); g.moveTo(cx + 34, GY - 380); g.arc(cx, GY - 380, 34, 0, 7);
+    g.moveTo(cx + 11, GY - 475); g.arc(cx, GY - 475, 11, 0, 7); g.rect(cx - 7, GY - 470, 14, 470); g.rect(cx - 2, GY - 600, 4, 130);
+    g.moveTo(cx - 70, GY); g.lineTo(cx - 20, GY - 150); g.lineTo(cx - 10, GY - 150); g.lineTo(cx - 56, GY); g.closePath();
+    g.moveTo(cx + 56, GY); g.lineTo(cx + 10, GY - 150); g.lineTo(cx + 20, GY - 150); g.lineTo(cx + 70, GY); g.closePath(); }
+  { const cx = 1010; // Jin Mao
+    g.moveTo(cx - 46, GY); for (let i = 0; i < 10; i++) { const hw = 46 - i * 3.4; g.lineTo(cx - hw, GY - i * 46 - 40); g.lineTo(cx - hw + 3, GY - i * 46 - 40); }
+    g.lineTo(cx - 4, GY - 520); g.lineTo(cx, GY - 570); g.lineTo(cx + 4, GY - 520);
+    for (let i = 9; i >= 0; i--) { const hw = 46 - i * 3.4; g.lineTo(cx + hw - 3, GY - i * 46 - 40); g.lineTo(cx + hw, GY - i * 46 - 40); } g.lineTo(cx + 46, GY); g.closePath(); }
+  { const cx = 1180; // SWFC, aperture cut out with even-odd
+    g.moveTo(cx - 50, GY); g.lineTo(cx - 20, GY - 560); g.lineTo(cx + 20, GY - 560); g.lineTo(cx + 50, GY); g.closePath();
+    g.moveTo(cx - 14, GY - 528); g.lineTo(cx + 14, GY - 528); g.lineTo(cx + 11, GY - 500); g.lineTo(cx - 11, GY - 500); g.closePath(); }
+  { const cx = 1370; // Shanghai Tower
+    g.moveTo(cx - 60, GY); g.bezierCurveTo(cx - 66, GY - 260, cx - 40, GY - 520, cx - 24, GY - 660);
+    g.lineTo(cx + 26, GY - 642); g.bezierCurveTo(cx + 36, GY - 540, cx + 54, GY - 300, cx + 58, GY); g.closePath(); }
+}
+
+/* ---------- assets ---------- */
 const A = {};
-function makePaper(seed, base) {
+function makePaper(seed) {
   const c = mk(W, H), g = c.getContext('2d'), r = mulberry(seed);
-  g.fillStyle = base; g.fillRect(0, 0, W, H);
-  for (let i = 0; i < 70; i++) {
-    const x = r() * W, y = r() * H, rad = 80 + r() * 420, a = .025 + r() * .045, dark = r() < .6;
-    const gr = g.createRadialGradient(x, y, 0, x, y, rad);
-    gr.addColorStop(0, dark ? `rgba(120,88,48,${a})` : `rgba(255,250,236,${a})`); gr.addColorStop(1, 'rgba(0,0,0,0)');
-    g.fillStyle = gr; g.fillRect(x - rad, y - rad, rad * 2, rad * 2);
-  }
+  g.fillStyle = COL.paper; g.fillRect(0, 0, W, H);
+  for (let i = 0; i < 50; i++) { const x = r() * W, y = r() * H, rad = 120 + r() * 420, a = .006 + r() * .01;
+    const gr = g.createRadialGradient(x, y, 0, x, y, rad); gr.addColorStop(0, r() < .5 ? `rgba(150,120,80,${a})` : `rgba(255,252,244,${a * 2})`); gr.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = gr; g.fillRect(x - rad, y - rad, rad * 2, rad * 2); }
   g.lineCap = 'round';
-  for (let i = 0; i < 7000; i++) {
-    const x = r() * W, y = r() * H, l = 4 + r() * 24, a = r() * Math.PI * 2;
-    g.strokeStyle = r() < .5 ? `rgba(90,68,38,${.035 + r() * .07})` : `rgba(255,252,240,${.08 + r() * .12})`;
-    g.lineWidth = .5 + r() * 1.1; g.beginPath(); g.moveTo(x, y);
-    g.quadraticCurveTo(x + Math.cos(a) * l * .5 + (r() - .5) * 6, y + Math.sin(a) * l * .5 + (r() - .5) * 6, x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke();
-  }
-  for (let i = 0; i < 4500; i++) { g.fillStyle = `rgba(60,40,20,${r() * .12})`; g.fillRect(r() * W, r() * H, 1 + r() * 1.5, 1 + r() * 1.5); }
-  const v = g.createRadialGradient(W / 2, H / 2, H * .35, W / 2, H / 2, H * 1.05);
-  v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(90,60,25,.22)');
-  g.fillStyle = v; g.fillRect(0, 0, W, H);
+  for (let i = 0; i < 3500; i++) { const x = r() * W, y = r() * H, l = 4 + r() * 18, a = r() * 7;
+    g.strokeStyle = r() < .5 ? `rgba(110,90,60,${.025 + r() * .04})` : `rgba(255,253,246,${.06 + r() * .08})`; g.lineWidth = .5 + r() * .8;
+    g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke(); }
+  const v = g.createRadialGradient(W / 2, H / 2, H * .45, W / 2, H / 2, H * 1.1);
+  v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(120,95,60,.10)'); g.fillStyle = v; g.fillRect(0, 0, W, H);
   return c;
 }
 function makeGrain(seed) {
   const c = mk(512, 512), g = c.getContext('2d'), d = g.createImageData(512, 512), r = mulberry(seed);
-  for (let i = 0; i < d.data.length; i += 4) { const v = 128 + (r() + r() + r() - 1.5) * 130; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; }
+  for (let i = 0; i < d.data.length; i += 4) { const v = 128 + (r() + r() - 1) * 90; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; }
   g.putImageData(d, 0, 0); return c;
 }
-function makeVignette() {
-  const c = mk(W, H), g = c.getContext('2d');
-  const v = g.createRadialGradient(W / 2, H / 2, H * .3, W / 2, H / 2, H * 1.0);
-  v.addColorStop(0, 'rgba(255,255,255,1)'); v.addColorStop(.6, 'rgba(225,218,205,1)'); v.addColorStop(1, 'rgba(70,60,50,1)');
-  g.fillStyle = v; g.fillRect(0, 0, W, H); return c;
+function makeSilhouette(pathFn) {
+  const c = mk(W, H), g = c.getContext('2d'); g.fillStyle = COL.ink; g.beginPath(); pathFn(g); g.fill('evenodd');
+  g.fillRect(100, GY, W - 200, 2); return c;
 }
-// fit a single CJK glyph into a box using its real ink bounds
-function fitGlyph(g, ch, x, y, w, h, font) {
-  g.save(); g.font = font; g.textAlign = 'left'; g.textBaseline = 'alphabetic';
-  const m = g.measureText(ch);
+function fitGlyph(g, ch, x, y, w, h) {
+  g.save(); g.font = `900 200px ${TC}`; const m = g.measureText(ch);
   const gw = m.actualBoundingBoxLeft + m.actualBoundingBoxRight, gh = m.actualBoundingBoxAscent + m.actualBoundingBoxDescent;
-  g.translate(x, y); g.scale(w / gw, h / gh);
-  g.fillText(ch, m.actualBoundingBoxLeft, m.actualBoundingBoxAscent);
-  g.restore();
+  g.translate(x, y); g.scale(w / gw, h / gh); g.fillText(ch, m.actualBoundingBoxLeft, m.actualBoundingBoxAscent); g.restore();
 }
-function makeSeal({ cols, w, h, mode, seed }) {
-  const pad = 24, c = mk(w + pad * 2, h + pad * 2), g = c.getContext('2d'), r = mulberry(seed);
-  g.translate(pad, pad);
-  const rough = (x, y, ww, hh, j) => {
-    g.beginPath(); const p = [];
-    for (let i = 0; i <= ww; i += 10) p.push([x + i, y + (r() - .5) * j]);
-    for (let i = 0; i <= hh; i += 10) p.push([x + ww + (r() - .5) * j, y + i]);
-    for (let i = ww; i >= 0; i -= 10) p.push([x + i, y + hh + (r() - .5) * j]);
-    for (let i = hh; i >= 0; i -= 10) p.push([x + (r() - .5) * j, y + i]);
-    g.moveTo(p[0][0], p[0][1]); p.forEach(q => g.lineTo(q[0], q[1])); g.closePath();
-  };
-  const font = `900 200px ${FONT.serifTC}`;
-  const border = mode === 'baiwen' ? 13 : 15;
-  const ncol = cols.length, cw = (w - border * 2) / ncol;
-  const glyphs = () => cols.forEach((col, ci) => {
-    const x0 = w - border - cw * (ci + 1), chH = (h - border * 2) / col.length;
-    col.forEach((ch, ri) => fitGlyph(g, ch, x0 + cw * .07, border + chH * ri + chH * .06, cw * .86, chH * .88, font));
-  });
-  g.fillStyle = COL.red; g.strokeStyle = COL.red;
-  if (mode === 'baiwen') {
-    rough(0, 0, w, h, 3.5); g.fill();
-    g.globalCompositeOperation = 'destination-out'; glyphs();
-  } else {
-    rough(4, 4, w - 8, h - 8, 3); g.lineWidth = 8; g.stroke(); glyphs();
-  }
-  // erosion: paper showing through, chipped edges
+function makeSeal(w, h, chars, seed) {
+  const pad = 16, c = mk(w + pad * 2, h + pad * 2), g = c.getContext('2d'), r = mulberry(seed);
+  g.translate(pad, pad); g.fillStyle = COL.red; g.beginPath();
+  const p = []; for (let i = 0; i <= w; i += 10) p.push([i, (r() - .5) * 2.5]); for (let i = 0; i <= h; i += 10) p.push([w + (r() - .5) * 2.5, i]);
+  for (let i = w; i >= 0; i -= 10) p.push([i, h + (r() - .5) * 2.5]); for (let i = h; i >= 0; i -= 10) p.push([(r() - .5) * 2.5, i]);
+  p.forEach((q, i) => i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1])); g.closePath(); g.fill();
   g.globalCompositeOperation = 'destination-out';
-  for (let i = 0; i < 520; i++) { g.globalAlpha = .35 + r() * .65; g.beginPath(); g.arc(r() * w, r() * h, .4 + r() * 2.2, 0, 7); g.fill(); }
-  for (let i = 0; i < 26; i++) {
-    const side = Math.floor(r() * 4), u = r();
-    const x = side === 0 ? u * w : side === 1 ? w : side === 2 ? u * w : 0;
-    const y = side === 0 ? 0 : side === 1 ? u * h : side === 2 ? h : u * h;
-    g.globalAlpha = 1; g.beginPath(); g.arc(x, y, 1.5 + r() * 5, 0, 7); g.fill();
-  }
-  // ink density: darker pools, lighter drag marks
+  const b = 12, ch = (h - b * 2) / chars.length;
+  chars.forEach((k, i) => fitGlyph(g, k, b + 6, b + ch * i + 6, w - b * 2 - 12, ch - 12));
+  for (let i = 0; i < 260; i++) { g.globalAlpha = .3 + r() * .6; g.beginPath(); g.arc(r() * w, r() * h, .4 + r() * 1.6, 0, 7); g.fill(); }
   g.globalCompositeOperation = 'source-atop'; g.globalAlpha = 1;
-  for (let i = 0; i < 18; i++) {
-    const x = r() * w, y = r() * h, rad = 20 + r() * 70, dark = r() < .55;
-    const gr = g.createRadialGradient(x, y, 0, x, y, rad);
-    gr.addColorStop(0, dark ? 'rgba(110,8,4,.45)' : 'rgba(240,120,95,.35)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
-    g.fillStyle = gr; g.fillRect(x - rad, y - rad, rad * 2, rad * 2);
-  }
+  for (let i = 0; i < 10; i++) { const x = r() * w, y = r() * h, rad = 30 + r() * 60, gr = g.createRadialGradient(x, y, 0, x, y, rad);
+    gr.addColorStop(0, r() < .5 ? 'rgba(120,15,8,.3)' : 'rgba(235,130,105,.25)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(x - rad, y - rad, rad * 2, rad * 2); }
   return c;
 }
-
-/* ---------- Shanghai, 1925: the Bund ---------- */
-const GY = 770;
-const BUND = [
-  { x: 0, w: 120, h: 150, top: 'flat' }, { x: 116, w: 92, h: 200, top: 'cupola' },
-  { x: 204, w: 160, h: 175, top: 'flat' }, { x: 360, w: 140, h: 245, top: 'stepped' },
-  { x: 497, w: 110, h: 335, top: 'chinese' }, { x: 604, w: 150, h: 285, top: 'pyramid' },
-  { x: 750, w: 116, h: 185, top: 'flat' }, { x: 862, w: 160, h: 240, top: 'clock' },
-  { x: 1018, w: 220, h: 205, top: 'dome' }, { x: 1234, w: 128, h: 168, top: 'flat' },
-  { x: 1358, w: 100, h: 228, top: 'cupola' }, { x: 1454, w: 176, h: 158, top: 'flat' },
-  { x: 1626, w: 122, h: 200, top: 'stepped' }, { x: 1744, w: 190, h: 140, top: 'flat' },
-];
-function bundPath(g, b, y = GY) {
-  const { x, w, h } = b;
-  g.beginPath(); g.rect(x, y - h, w, h + 4); g.rect(x - 4, y - h - 6, w + 8, 8);
-  const cx = x + w / 2;
-  switch (b.top) {
-    case 'clock': { const tw = 56, tx = cx - tw / 2; g.rect(tx, y - h - 130, tw, 132); g.rect(tx - 6, y - h - 138, tw + 12, 9);
-      g.moveTo(tx + 3, y - h - 137); g.lineTo(cx, y - h - 178); g.lineTo(tx + tw - 3, y - h - 137); g.closePath(); g.rect(cx - 1.5, y - h - 204, 3, 30); break; }
-    case 'pyramid': g.moveTo(x + 12, y - h - 5); g.lineTo(cx, y - h - 90); g.lineTo(x + w - 12, y - h - 5); g.closePath(); g.rect(cx - 1.5, y - h - 114, 3, 28); break;
-    case 'dome': { const r = w * .2; g.rect(cx - r * 1.25, y - h - 30, r * 2.5, 26); g.moveTo(cx - r, y - h - 28); g.arc(cx, y - h - 28, r, Math.PI, 0); g.closePath();
-      g.rect(cx - 6, y - h - 28 - r - 18, 12, 22); g.rect(cx - 1.5, y - h - 28 - r - 36, 3, 20); break; }
-    case 'chinese': g.moveTo(x - 18, y - h - 2); g.quadraticCurveTo(x - 2, y - h - 6, x + 10, y - h - 30); g.lineTo(x + w - 10, y - h - 30);
-      g.quadraticCurveTo(x + w + 2, y - h - 6, x + w + 18, y - h - 2); g.closePath();
-      g.moveTo(x + 14, y - h - 28); g.lineTo(x + w * .36, y - h - 62); g.lineTo(x + w * .64, y - h - 62); g.lineTo(x + w - 14, y - h - 28); g.closePath(); break;
-    case 'stepped': for (let i = 1; i <= 3; i++) { const ins = i * 16; g.rect(x + ins, y - h - i * 34, w - ins * 2, 36); } g.rect(cx - 1.5, y - h - 132, 3, 32); break;
-    case 'cupola': g.rect(cx - 22, y - h - 30, 44, 26); g.moveTo(cx - 24, y - h - 30); g.arc(cx, y - h - 30, 24, Math.PI, 0); g.closePath(); g.rect(cx - 1.5, y - h - 82, 3, 30); break;
-  }
-}
-function bundWindows(g, b, y = GY, bi = 0) {
-  const style = bi % 3, sx = [18, 24, 14][style], sy = [27, 46, 22][style], ww = [7, 9, 4][style], wh = [13, 30, 12][style];
-  const cols = Math.floor((b.w - 14) / sx), rows = Math.floor((b.h - 34) / sy);
-  const ox = b.x + (b.w - (cols - 1) * sx - ww) / 2;
-  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
-    if (hash(bi * 977 + r * 31 + c * 7) < (style === 1 ? .05 : .18)) continue;
-    if (style === 1) { g.beginPath(); g.roundRect(ox + c * sx, y - b.h + 22 + r * sy, ww, wh, [ww / 2, ww / 2, 0, 0]); g.fill(); }
-    else g.fillRect(ox + c * sx, y - b.h + 20 + r * sy, ww, wh);
-  }
-  if (b.top === 'flat' || b.top === 'dome') { g.fillRect(b.x + 6, y - 16, b.w - 12, 3); }
-}
-function makeHalftone({ value, spacing, angle, color, w = W, h = H }) {
-  const c = mk(w, h), g = c.getContext('2d'); g.fillStyle = color;
-  const ca = Math.cos(angle), sa = Math.sin(angle), R = Math.hypot(w, h);
-  for (let v = -R; v < R; v += spacing) for (let u = -R; u < R; u += spacing) {
-    const x = w / 2 + u * ca - v * sa, y = h / 2 + u * sa + v * ca;
-    if (x < -spacing || y < -spacing || x > w + spacing || y > h + spacing) continue;
-    const k = value(x, y); if (k <= 0.01) continue;
-    g.beginPath(); g.arc(x, y, Math.sqrt(k) * spacing * .62, 0, 7); g.fill();
-  }
-  return c;
-}
-
-/* ---------- Shanghai, 2026: Pudong in neon ---------- */
-const GY2 = 800;
-function neonElements() {
-  const els = [];
-  const rect = (x, w, h, on, floors) => els.push({ on, dim: .55, draw: g => {
-    g.beginPath(); g.rect(x, GY2 - h, w, h);
-    if (floors) for (let y = GY2 - h + 26; y < GY2 - 8; y += 26) { g.moveTo(x + 8, y); g.lineTo(x + w - 8, y); }
-  } });
-  [[560, 60, 170, 22.05], [820, 70, 260, 21.95], [900, 58, 340, 22.3], [985, 86, 215, 22.15], [1078, 58, 300, 22.45],
-   [1262, 64, 360, 22.2], [1478, 56, 320, 22.35], [1705, 78, 410, 22.0], [1792, 66, 280, 22.5], [1862, 62, 345, 22.25],
-   [610, 50, 120, 22.4], [1330, 46, 230, 22.55]].forEach((r, i) => rect(r[0], r[1], r[2], r[3], i % 2 === 0));
-  // Oriental Pearl Tower
-  els.push({ on: 21.7, draw: g => { const cx = 700;
-    g.beginPath(); g.moveTo(cx - 72, GY2); g.lineTo(cx - 14, GY2 - 160); g.moveTo(cx + 72, GY2); g.lineTo(cx + 14, GY2 - 160);
-    g.moveTo(cx - 8, GY2); g.lineTo(cx - 8, GY2 - 142); g.moveTo(cx + 8, GY2); g.lineTo(cx + 8, GY2 - 142);
-    g.moveTo(cx + 58, GY2 - 205); g.arc(cx, GY2 - 205, 58, 0, Math.PI * 2);
-    g.moveTo(cx - 9, GY2 - 263); g.lineTo(cx - 9, GY2 - 392); g.moveTo(cx + 9, GY2 - 263); g.lineTo(cx + 9, GY2 - 392);
-    g.moveTo(cx + 40, GY2 - 430); g.arc(cx, GY2 - 430, 40, 0, Math.PI * 2);
-    g.moveTo(cx, GY2 - 470); g.lineTo(cx, GY2 - 528); g.moveTo(cx + 13, GY2 - 541); g.arc(cx, GY2 - 541, 13, 0, Math.PI * 2);
-    g.moveTo(cx, GY2 - 554); g.lineTo(cx, GY2 - 690); } });
-  // Jin Mao — stepped pagoda
-  els.push({ on: 22.0, draw: g => { const cx = 1180; const L = [], R = [];
-    for (let i = 0; i < 11; i++) { const y = GY2 - i * 52, hw = 52 - i * 3.6; L.push([cx - hw, y], [cx - hw - 4, y - 6], [cx - hw + 3, y - 8]); R.push([cx + hw, y], [cx + hw + 4, y - 6], [cx + hw - 3, y - 8]); }
-    g.beginPath(); g.moveTo(L[0][0], L[0][1]); L.forEach(p => g.lineTo(p[0], p[1]));
-    g.lineTo(cx - 6, GY2 - 600); g.lineTo(cx, GY2 - 660); g.lineTo(cx + 6, GY2 - 600);
-    R.slice().reverse().forEach(p => g.lineTo(p[0], p[1])); } });
-  // Shanghai World Financial Center — the bottle opener
-  els.push({ on: 22.15, draw: g => { const cx = 1400;
-    g.beginPath(); g.moveTo(cx - 56, GY2); g.lineTo(cx - 22, GY2 - 650); g.lineTo(cx + 22, GY2 - 650); g.lineTo(cx + 56, GY2); g.closePath();
-    g.moveTo(cx - 17, GY2 - 612); g.lineTo(cx + 17, GY2 - 612); g.lineTo(cx + 13, GY2 - 578); g.lineTo(cx - 13, GY2 - 578); g.closePath();
-    g.moveTo(cx, GY2); g.lineTo(cx, GY2 - 560); } });
-  // Shanghai Tower — the twist
-  els.push({ on: 22.3, draw: g => { const cx = 1600;
-    g.beginPath(); g.moveTo(cx - 70, GY2); g.bezierCurveTo(cx - 76, GY2 - 300, cx - 46, GY2 - 600, cx - 28, GY2 - 770);
-    g.lineTo(cx + 30, GY2 - 748); g.bezierCurveTo(cx + 42, GY2 - 620, cx + 62, GY2 - 340, cx + 66, GY2);
-    g.moveTo(cx + 66, GY2); g.bezierCurveTo(cx - 8, GY2 - 260, cx + 34, GY2 - 520, cx - 28, GY2 - 770); } });
-  return els;
-}
-const NEON = neonElements();
-const NEON_QIPAO = resample(QIPAO.map(p => [250 + p[0] * .4, 150 + p[1] * .4]), STEP);
-const NEON_PLACKET = resample(PLACKET.map(p => [250 + p[0] * .4, 150 + p[1] * .4]), STEP);
-
-/* ---------- title layout ---------- */
-const TITLE = { size: 232, track: 30, baseline: 560, letters: [], seal: null };
+const TITLE = {};
 function layoutTitle() {
-  const g = mk(10, 10).getContext('2d'); g.font = `900 ${TITLE.size}px ${FONT.bodoni}`;
-  const word = 'MARGINS'; let x = 0; const adv = [];
-  for (const ch of word) { const w = g.measureText(ch).width; adv.push([ch, x, w]); x += w + TITLE.track; }
-  const textW = x - TITLE.track, sealW = 164, gap = 56, total = textW + gap + sealW;
-  const x0 = W / 2 - total / 2;
-  TITLE.left = x0; TITLE.right = x0 + textW;
-  TITLE.cx = x0 + textW / 2;
-  TITLE.seal = { x: x0 + textW + gap, y: TITLE.baseline - 250, w: sealW, h: 304 };
-  const r = mulberry(1925);
-  TITLE.letters = adv.map(([ch, lx, w]) => {
-    const m = g.measureText(ch), pad = 20;
-    const asc = m.actualBoundingBoxAscent, desc = m.actualBoundingBoxDescent;
-    const cw = Math.ceil(w + pad * 2), chh = Math.ceil(asc + desc + pad * 2);
-    const c = mk(cw, chh), lg = c.getContext('2d');
-    lg.font = g.font; lg.textBaseline = 'alphabetic';
-    lg.fillStyle = 'rgba(255,255,255,.55)'; lg.fillText(ch, pad + 1.6, pad + asc + 2.2); // deboss highlight
-    lg.fillStyle = 'rgba(70,55,40,.35)'; lg.fillText(ch, pad - .8, pad + asc - .8);
-    lg.fillStyle = COL.ink; lg.globalAlpha = .9 + r() * .08; lg.fillText(ch, pad, pad + asc); lg.globalAlpha = 1;
-    lg.globalCompositeOperation = 'destination-out';
-    for (let i = 0; i < 260; i++) { lg.globalAlpha = .2 + r() * .7; lg.beginPath(); lg.arc(r() * cw, r() * chh, .3 + r() * 1.6, 0, 7); lg.fill(); }
-    for (let i = 0; i < 5; i++) { lg.globalAlpha = .12; const y = r() * chh; lg.fillRect(0, y, cw, 1 + r() * 3); }
-    lg.globalCompositeOperation = 'source-over'; lg.globalAlpha = 1;
-    return { ch, canvas: c, x: x0 + lx - pad, y: TITLE.baseline - asc - pad, w, asc, cx: x0 + lx + w / 2, cy: TITLE.baseline - asc / 2 };
-  });
+  const g = mk(10, 10).getContext('2d'); g.font = `400 176px ${SERIF}`;
+  const track = 40, word = 'MARGINS'; let x = 0; const adv = [];
+  for (const ch of word) { const w = g.measureText(ch).width; adv.push([ch, x, w]); x += w + track; }
+  const textW = x - track, sealW = 92, gap = 54, x0 = W / 2 - (textW + gap + sealW) / 2;
+  Object.assign(TITLE, { baseline: 560, x0, textW, cx: x0 + textW / 2, letters: adv.map(([ch, lx]) => ({ ch, x: x0 + lx })),
+    seal: { x: x0 + textW + gap, y: 560 - 170, w: sealW, h: 170 } });
 }
-
 async function loadFonts() {
-  const specs = [
-    [`900 100px ${FONT.bodoni}`, 'MARGINSHANGBYMARGINS.COM'], [`400 100px ${FONT.bodoni}`, 'SHANGHAIBYMARGINS.COM'],
-    [`400 30px ${FONT.mono}`, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&—·.\'/'],
-    [`400 100px ${FONT.brush}`, '上海三二一第一卷'],
-    [`900 100px ${FONT.serifTC}`, '邊緣旗袍新中式播放'],
-    [`400 100px ${FONT.serifTC}`, CN_LINE + '肩寬胸圍腰圍臀圍衣長領襟衩盤扣裁縫上海第一卷新中式'],
-  ];
-  await Promise.all(specs.map(s => document.fonts.load(s[0], s[1]).catch(() => {})));
+  await Promise.all([[`400 100px ${SERIF}`, 'MARGINSbymargins.comPlay'], [`900 100px ${TC}`, '邊緣'], [`400 100px ${TC}`, '一部關於旗袍的紀錄片']]
+    .map(s => document.fonts.load(s[0], s[1]).catch(() => {})));
   await document.fonts.ready;
 }
-
 function buildAssets() {
-  A.paperA = makePaper(11, '#ebe1cb');
-  A.paperB = makePaper(23, '#e8dabd');
-  A.paperC = makePaper(37, '#eee5d1');
-  A.grain = [1, 2, 3, 4].map(makeGrain);
-  A.vignette = makeVignette();
-  A.sealBian = makeSeal({ cols: [['邊', '緣']], w: 164, h: 304, mode: 'baiwen', seed: 7 });
-  A.sealQipao = makeSeal({ cols: [['旗'], ['袍']], w: 112, h: 112, mode: 'zhuwen', seed: 19 });
-  const sun = { x: 1250, y: 560, r: 200 };
-  A.sky = makeHalftone({ spacing: 9, angle: .26, color: COL.red, value: (x, y) => {
-    if (y > GY) return 0; const d = Math.hypot(x - sun.x, y - sun.y);
-    return clamp(.06 + .45 * Math.pow(y / GY, 2.2) + .55 * Math.exp(-Math.max(0, d - sun.r) / 230));
-  } });
-  // halftone ghost of the Bund for the title card
-  const sil = mk(W, H), sg = sil.getContext('2d'); sg.fillStyle = '#000';
-  BUND.forEach(b => { bundPath(sg, b, H); sg.fill(); });
-  const data = sg.getImageData(0, 0, W, H).data;
-  A.bundGhost = makeHalftone({ spacing: 12, angle: .26, color: COL.red, value: (x, y) => {
-    const xi = x | 0, yi = y | 0; if (xi < 0 || yi < 0 || xi >= W || yi >= H) return 0;
-    return data[(yi * W + xi) * 4 + 3] > 128 ? .25 + .75 * prog(y, H - 520, H) : 0;
-  } });
-  A.neonLayer = mk(W, H);
+  A.paper = makePaper(11); A.grain = [1, 2, 3].map(makeGrain);
+  A.bund = makeSilhouette(g => BUND.forEach(b => bundPath(g, b)));
+  A.pudong = makeSilhouette(pudongPath);
   layoutTitle();
+  A.seal = makeSeal(TITLE.seal.w, TITLE.seal.h, ['邊', '緣'], 7);
 }
 
-/* =====================================================================
-   SCENES
-   ===================================================================== */
-function typeText(g, str, x, y, t0, cps, t, { font, color, align = 'left', spacing = 0, cursor = true }) {
-  if (t < t0) return;
-  const chars = [...str], n = Math.min(chars.length, Math.floor((t - t0) * cps));
-  g.save(); g.font = font; g.fillStyle = color; g.letterSpacing = spacing + 'px'; g.textAlign = 'left'; g.textBaseline = 'alphabetic';
-  const full = g.measureText(str).width, sx = align === 'center' ? x - full / 2 : x;
-  const s = chars.slice(0, n).join(''); g.fillText(s, sx, y);
-  const done = n >= chars.length, blink = Math.floor(t * 2.5) % 2 === 0;
-  if (cursor && (!done || (blink && t - t0 < chars.length / cps + 1.2))) {
-    const w = g.measureText(s).width, sz = parseFloat(font.match(/(\d+)px/)[1]);
-    g.globalAlpha = .8; g.fillRect(sx + w + 2, y - sz * .78, sz * .5, sz * .92);
-  }
-  g.restore();
-}
-
-/* ---- 0. Leader ---- */
-function sceneLeader(g, t, fi) {
-  if (t < 3.6) {
-    const lum = eout(prog(t, .05, .7)) * (t < .7 ? (hash(fi) < .4 ? .55 : 1) : 1);
-    g.fillStyle = `rgb(${154 * lum | 0},${146 * lum | 0},${132 * lum | 0})`; g.fillRect(-20, -20, W + 40, H + 40);
-    const cx = W / 2, cy = H / 2;
-    if (t > .6) {
-      const k = (t - .6) % 1, idx = Math.min(2, Math.floor(t - .6));
-      g.fillStyle = 'rgba(70,62,52,.55)'; g.beginPath(); g.moveTo(cx, cy);
-      g.arc(cx, cy, 1200, -Math.PI / 2, -Math.PI / 2 + k * Math.PI * 2); g.closePath(); g.fill();
-      g.strokeStyle = 'rgba(240,235,222,.85)'; g.lineWidth = 4;
-      g.beginPath(); g.arc(cx, cy, 340, 0, 7); g.stroke(); g.beginPath(); g.arc(cx, cy, 300, 0, 7); g.stroke();
-      g.lineWidth = 2; g.beginPath(); g.moveTo(0, cy); g.lineTo(W, cy); g.moveTo(cx, 0); g.lineTo(cx, H); g.stroke();
-      g.font = `400 360px ${FONT.brush}`; g.textAlign = 'center'; g.textBaseline = 'middle';
-      g.fillStyle = 'rgba(25,20,16,.92)'; g.fillText(['三', '二', '一'][idx], cx, cy + 10);
-      g.font = `400 26px ${FONT.mono}`; g.fillStyle = 'rgba(240,235,222,.8)'; g.fillText(String(3 - idx), cx + 300, cy - 300);
-    }
-    // film edge: sprockets + edge print
-    g.fillStyle = 'rgba(15,12,10,.85)'; g.fillRect(0, 0, 90, H); g.fillRect(W - 90, 0, 90, H);
-    g.fillStyle = `rgb(${154 * lum | 0},${146 * lum | 0},${132 * lum | 0})`;
-    for (let y = -40; y < H + 40; y += 72) { const yy = y + ((fi * 9) % 72); g.beginPath(); g.roundRect(28, yy, 34, 46, 6); g.roundRect(W - 62, yy, 34, 46, 6); g.fill(); }
-    g.save(); g.translate(78, H / 2); g.rotate(-Math.PI / 2); g.font = `400 18px ${FONT.mono}`; g.fillStyle = 'rgba(230,140,90,.7)'; g.textAlign = 'center';
-    g.fillText('MARGINS  ▲  35  ▲  REEL 1  ▲  第一卷  ▲  2026', 0, 0); g.restore();
-  } else {
-    g.fillStyle = '#060504'; g.fillRect(-20, -20, W + 40, H + 40);
-    const a = prog(t, 3.75, 4.0) * (1 - prog(t, 4.25, 4.45));
-    g.globalAlpha = a; g.textAlign = 'center'; g.textBaseline = 'middle';
-    g.font = `400 120px ${FONT.brush}`; g.fillStyle = 'rgba(236,226,204,.92)'; g.fillText('第一卷', W / 2, H / 2 - 30);
-    g.font = `400 22px ${FONT.mono}`; g.letterSpacing = '10px'; g.fillStyle = 'rgba(236,226,204,.6)'; g.fillText('REEL ONE', W / 2, H / 2 + 70);
-    g.letterSpacing = '0px'; g.globalAlpha = 1;
-  }
-}
-
-/* ---- 1. The tailor's draft ---- */
-function drawFrog(g, x, y, s) {
-  if (s <= 0) return;
-  g.save(); g.translate(x, y); g.scale(s, s); g.strokeStyle = '#9e1b13'; g.fillStyle = '#9e1b13'; g.lineWidth = 2.6; g.lineCap = 'round';
-  for (const side of [-1, 1]) {
-    g.beginPath(); for (let a = 0; a < Math.PI * 4.2; a += .2) { const r = 1 + a * .62; g.lineTo(side * 15 + Math.cos(a) * r * side, Math.sin(a) * r); } g.stroke();
-  }
-  g.beginPath(); g.moveTo(-7, 0); g.lineTo(7, 0); g.stroke(); g.beginPath(); g.arc(0, 0, 3.6, 0, 7); g.fill();
-  g.restore();
-}
-function sceneDraft(g, t, fi) {
-  g.save();
-  cam(g, W / 2, H / 2, 1 + .05 * eio(prog(t, 4.5, 13.8)));
-  g.drawImage(A.paperA, 0, 0);
-  const ox = 960, oy = 150;
-  // grid
-  g.globalAlpha = .18 * prog(t, 4.6, 5.4); g.strokeStyle = '#6b7c8c'; g.lineWidth = 1;
-  g.beginPath(); for (let x = 40; x < W; x += 40) { g.moveTo(x, 0); g.lineTo(x, H); } for (let y = 30; y < H; y += 40) { g.moveTo(0, y); g.lineTo(W, y); } g.stroke();
-  g.globalAlpha = 1;
-  g.save(); g.translate(ox, oy);
-  // ruler
-  const rp = eout(prog(t, 4.7, 5.9)); g.strokeStyle = COL.chalk; g.fillStyle = COL.chalk; g.lineWidth = 1.4;
-  g.beginPath(); g.moveTo(-540, 0); g.lineTo(-540, 793 * rp);
-  for (let y = 0; y <= 793 * rp; y += 10) { const l = y % 50 === 0 ? 16 : 7; g.moveTo(-540, y); g.lineTo(-540 + l, y); } g.stroke();
-  g.font = `400 15px ${FONT.mono}`; g.textAlign = 'right';
-  for (let y = 0; y <= 793 * rp; y += 100) g.fillText(String(y / 100 * 16 | 0), -550, y + 5);
-  // center fold line
-  g.setLineDash([10, 6, 2, 6]); g.lineWidth = 1.2; g.beginPath(); g.moveTo(0, -30); g.lineTo(0, -30 + 860 * eio(prog(t, 4.8, 6.0))); g.stroke(); g.setLineDash([]);
-  // measurement guides
-  const guides = [[86, '肩寬', 'SHOULDER', 38], [252, '胸圍', 'BUST', 86], [362, '腰圍', 'WAIST', 64], [472, '臀圍', 'HIP', 92], [793, '衣長', 'LENGTH', 128]];
-  guides.forEach(([y, cn, en, v], i) => {
-    const p = eio(prog(t, 5.0 + i * .22, 5.6 + i * .22)); if (p <= 0) return;
-    g.strokeStyle = COL.chalk; g.globalAlpha = .7; g.setLineDash([6, 6]); g.lineWidth = 1.2;
-    g.beginPath(); g.moveTo(-330, y); g.lineTo(-330 + 660 * p, y); g.stroke(); g.setLineDash([]);
-    const la = prog(t, 5.4 + i * .22, 5.8 + i * .22); g.globalAlpha = la;
-    g.fillStyle = COL.ink; g.font = `400 26px ${FONT.serifTC}`; g.textAlign = 'left'; g.fillText(cn, 345, y + 9);
-    g.font = `400 22px ${FONT.mono}`; g.fillStyle = COL.red; g.fillText(String(v), 405, y + 8);
-    g.fillStyle = COL.chalk; g.font = `400 15px ${FONT.mono}`; g.textAlign = 'right'; g.letterSpacing = '3px'; g.fillText(en, -345, y + 5); g.letterSpacing = '0px';
-    g.globalAlpha = 1;
-  });
-  // faint pencil underdrawing of the silhouette
-  const pd = prog(t, 5.2, 6.4); if (pd > 0) { g.strokeStyle = 'rgba(60,60,70,.28)'; g.lineWidth = 1; strokePartial(g, QIPAO, QIPAO_LEN * pd); g.stroke(); }
-  // red stitches
-  const sl = QIPAO_LEN * prog(t, T.sew[0], T.sew[1]);
-  strokeStitches(g, QIPAO, sl);
-  const pl = PLACKET_LEN * prog(t, T.placket[0], T.placket[1]);
-  strokeStitches(g, PLACKET, pl, 3);
-  // needle
-  let head = null;
-  if (t > T.sew[0] && t < T.sew[1]) head = QIPAO[Math.min(QIPAO.length - 1, Math.floor(sl / STEP))];
-  else if (t > T.placket[0] && t < T.placket[1]) head = PLACKET[Math.min(PLACKET.length - 1, Math.floor(pl / STEP))];
-  if (head) {
-    const bob = Math.abs(Math.sin(t * Math.PI * 22)) * 8;
-    g.save(); g.translate(head[0], head[1] - bob);
-    g.fillStyle = 'rgba(0,0,0,.18)'; g.fillRect(6, -140, 3, 140);
-    const ng = g.createLinearGradient(-2, 0, 2, 0); ng.addColorStop(0, '#6d6a66'); ng.addColorStop(.5, '#e9e6df'); ng.addColorStop(1, '#55524e');
-    g.fillStyle = ng; g.beginPath(); g.moveTo(-2.2, -150); g.lineTo(2.2, -150); g.lineTo(.6, 0); g.lineTo(-.6, 0); g.closePath(); g.fill();
-    g.strokeStyle = '#9e1b13'; g.lineWidth = 1.4; g.beginPath(); g.moveTo(0, -30); g.quadraticCurveTo(14, -90, 30, -160); g.stroke();
-    g.restore();
-  }
-  T.frogs.forEach((ft, i) => drawFrog(g, FROGS[i][0], FROGS[i][1], eback(prog(t, ft, ft + .3)) * .85));
-  // annotations
-  const ann = [[11.0, [-40, 12], [-200, -22], '領', 'COLLAR', 'right'], [11.3, [6, 28], [140, -22], '盤扣', 'FROG', 'left'],
-               [11.15, [-120, 100], [-215, 165], '襟', 'PLACKET', 'right'], [11.5, [150, 700], [262, 700], '衩', 'SLIT', 'left']];
-  ann.forEach(([at, a, b, cn, en, al]) => {
-    const p = eout(prog(t, at, at + .5)); if (p <= 0) return;
-    g.strokeStyle = COL.ink; g.lineWidth = 1; g.beginPath(); g.arc(a[0], a[1], 3, 0, 7); g.moveTo(a[0], a[1]); g.lineTo(lerp(a[0], b[0], p), lerp(a[1], b[1], p)); g.stroke();
-    g.globalAlpha = prog(t, at + .3, at + .6); g.textAlign = al; const dx = al === 'left' ? 10 : -10;
-    g.fillStyle = COL.ink; g.font = `400 28px ${FONT.serifTC}`; g.fillText(cn, b[0] + dx, b[1] + 10);
-    g.font = `400 13px ${FONT.mono}`; g.letterSpacing = '3px'; g.fillStyle = COL.chalk; g.fillText(en, b[0] + dx, b[1] + 30); g.letterSpacing = '0px';
-    g.globalAlpha = 1;
-  });
-  g.restore();
-  // mini seal 旗袍
-  if (t >= T.miniSeal) {
-    const u = prog(t, T.miniSeal, T.miniSeal + .35), s = A.sealQipao;
-    g.save(); g.translate(1395, 845); g.rotate(-.04); g.scale(1 + .02 * (1 - eout(u)), 1 + .02 * (1 - eout(u)));
-    g.globalCompositeOperation = 'multiply'; g.globalAlpha = .95; g.drawImage(s, -s.width / 2, -s.height / 2); g.restore();
-  } else if (t > T.miniSeal - .3) {
-    const u = prog(t, T.miniSeal - .3, T.miniSeal); g.save(); g.filter = `blur(${lerp(24, 4, u)}px)`;
-    g.fillStyle = `rgba(30,15,10,${.35 * u})`; g.fillRect(1395 - 64 + lerp(30, 3, u), 845 - 64 + lerp(30, 3, u), 128, 128); g.restore();
-  }
-  typeText(g, 'NO. 01  /  裁縫  THE TAILOR\'S DRAFT', 90, 92, 4.9, 26, t, { font: `400 22px ${FONT.mono}`, color: 'rgba(23,18,15,.82)', spacing: 2 });
-  typeText(g, '上海 · SHANGHAI · 1925', 90, 1000, 11.6, 18, t, { font: `400 22px ${FONT.mono}`, color: 'rgba(23,18,15,.82)', spacing: 3 });
-  g.restore();
-}
-
-/* ---- 2. Shanghai ---- */
-function yearCounter(g, t, neon) {
-  const e = eio(prog(t, T.year[0], T.year[1]));
-  const start = [1, 9, 2, 5], steps = [1, 1, 10, 101], bw = 64, bh = 98, x0 = 1556, y0 = 900;
-  g.save();
-  g.font = `400 84px ${FONT.mono}`; g.textAlign = 'center'; g.textBaseline = 'middle';
-  for (let i = 0; i < 4; i++) {
-    const v = start[i] + steps[i] * e, base = Math.floor(v), f = v - base, x = x0 + i * (bw + 10);
-    g.save(); g.beginPath(); g.rect(x, y0, bw, bh); g.clip();
-    if (neon) { g.fillStyle = 'rgba(255,59,42,.06)'; g.fillRect(x, y0, bw, bh); }
-    g.fillStyle = neon ? COL.neon : COL.ink;
-    if (neon) { g.shadowColor = COL.neon; g.shadowBlur = 16; }
-    g.fillText(String(base % 10), x + bw / 2, y0 + bh / 2 + 4 - f * bh);
-    g.fillText(String((base + 1) % 10), x + bw / 2, y0 + bh / 2 + 4 + (1 - f) * bh);
-    g.restore();
-    g.strokeStyle = neon ? 'rgba(255,59,42,.7)' : 'rgba(23,18,15,.75)'; g.lineWidth = 2; g.strokeRect(x, y0, bw, bh);
-    g.beginPath(); g.moveTo(x, y0 + bh / 2); g.lineTo(x + bw, y0 + bh / 2); g.globalAlpha = .25; g.stroke(); g.globalAlpha = 1;
-  }
-  g.font = `400 15px ${FONT.mono}`; g.letterSpacing = '6px'; g.fillStyle = neon ? 'rgba(255,120,100,.8)' : 'rgba(23,18,15,.7)';
-  g.fillText(neon ? 'NOW' : 'THEN', x0 + 2 * (bw + 10) - 5, y0 - 22); g.letterSpacing = '0px';
-  g.restore();
-}
-function junk(g, x, y, s, color) {
-  g.save(); g.translate(x, y); g.scale(s, s); g.fillStyle = color;
-  g.beginPath(); g.moveTo(-90, 0); g.quadraticCurveTo(-100, -22, -112, -32); g.lineTo(-60, -14); g.lineTo(60, -14); g.lineTo(102, -36); g.quadraticCurveTo(92, -12, 80, 0); g.closePath(); g.fill();
-  g.fillRect(-12, -146, 3.5, 134); g.fillRect(40, -104, 3, 92);
-  g.beginPath(); g.moveTo(-10, -144); g.quadraticCurveTo(-74, -124, -82, -28); g.lineTo(-10, -20); g.closePath(); g.fill();
-  g.beginPath(); g.moveTo(43, -102); g.quadraticCurveTo(-2, -84, -4, -24); g.lineTo(43, -20); g.closePath(); g.fill();
-  g.strokeStyle = '#e8dabd'; g.lineWidth = 1.8;
-  for (let i = 1; i < 6; i++) { const yy = -144 + i * 21; g.beginPath(); g.moveTo(-10, yy); g.lineTo(-10 - 13 * i - 6, yy + i * 2.4); g.stroke(); }
-  for (let i = 1; i < 4; i++) { const yy = -102 + i * 20; g.beginPath(); g.moveTo(43, yy); g.lineTo(43 - 12 * i - 4, yy + i * 2); g.stroke(); }
-  g.restore();
-}
-function sceneOld(g, t, fi) {
-  g.save();
-  cam(g, W / 2, H / 2, 1.04, -40 * eio(prog(t, 13.6, 21)), 0);
-  g.drawImage(A.paperB, 0, 0);
-  const mis = 16 * (1 - eout(prog(t, 13.8, 16.4))) + 1.2;
-  const mx = mis, my = -mis * .6;
-  // red plate (misregistered)
-  g.save(); g.translate(mx, my); g.globalCompositeOperation = 'multiply';
-  g.globalAlpha = prog(t, 13.4, 14.4); g.drawImage(A.sky, 0, 0); g.globalAlpha = 1;
-  const sunY = lerp(760, 560, eout(prog(t, 13.9, 16.6)));
-  g.save(); g.beginPath(); g.rect(0, 0, W, GY); g.clip();
-  g.fillStyle = COL.red; g.beginPath(); g.arc(1250, sunY, 200, 0, 7); g.fill(); g.restore();
-  // sun on the water
-  for (let k = 0; k < 26; k++) {
-    const y = GY + 12 + k * 9, w = 200 * (1 - k / 30) * (.6 + .4 * Math.sin(k * 1.7 + t * 2)), sx = Math.sin(t * 1.6 + k * .8) * 8;
-    g.globalAlpha = .75 * (1 - k / 28) * prog(t, 14.5, 16); g.fillStyle = COL.red; g.fillRect(1250 - w + sx, y, w * 2, 3.2);
-  }
-  g.restore();
-  // black plate: the Bund rising
-  g.save(); g.beginPath(); g.rect(-60, -60, W + 120, GY + 61); g.clip();
-  BUND.forEach((b, i) => {
-    const u = prog(t, 14.0 + i * .075, 15.0 + i * .075); if (u <= 0) return;
-    const yOff = (1 - eout(u)) * (b.h + 140);
-    g.fillStyle = COL.ink; bundPath(g, b, GY + yOff); g.fill();
-    g.fillStyle = 'rgba(232,218,189,.88)'; bundWindows(g, b, GY + yOff, i);
-  });
-  g.restore();
-  g.fillStyle = COL.ink; g.fillRect(-60, GY, W + 120, 4 * prog(t, 13.9, 14.3));
-  // reflections
-  BUND.forEach((b, i) => {
-    const u = prog(t, 14.6 + i * .075, 15.6 + i * .075); if (u <= 0) return;
-    for (let k = 0; k < 22; k++) {
-      const y = GY + 14 + k * 9, sx = Math.sin(t * 1.5 + k * .7 + i) * 3 * (1 + k / 6);
-      g.globalAlpha = (.5 - k * .02) * u; g.fillStyle = COL.ink;
-      let x = b.x + 6; while (x < b.x + b.w - 6) {
-        const seg = 8 + hash(i * 131 + k * 17 + x) * 40, gap = 4 + hash(i * 71 + k * 13 + x) * 16;
-        g.fillRect(x + sx, y, Math.min(seg, b.x + b.w - 6 - x), 2.4 - k * .06); x += seg + gap;
-      }
-    }
-  });
-  g.globalAlpha = 1;
-  junk(g, -260 + (t - 14.2) * 130, GY + 108, .9, COL.ink);
-  g.save(); g.globalAlpha = .22; g.scale(1, -.45); junk(g, -260 + (t - 14.2) * 130, -(GY + 118) / .45, .9, COL.ink); g.restore();
-  // 上海 calligraphy, revealed like ink soaking down
-  const rv = prog(t, 14.5, 15.7);
-  if (rv > 0) {
-    g.save(); g.beginPath(); g.rect(80, 80, 260, 340 * eout(rv) + 10); g.clip();
-    g.font = `400 160px ${FONT.brush}`; g.fillStyle = COL.ink; g.textAlign = 'center'; g.textBaseline = 'top';
-    g.fillText('上', 210, 92); g.fillText('海', 210, 250); g.restore();
-  }
-  g.globalAlpha = prog(t, 15.4, 16.0); g.font = `400 26px ${FONT.bodoni}`; g.letterSpacing = '10px'; g.fillStyle = COL.ink; g.textAlign = 'left';
-  g.fillText('SHANGHAI', 112, 470); g.letterSpacing = '0px'; g.globalAlpha = 1;
-  typeText(g, 'THE PARIS OF THE EAST', 114, 506, 16.0, 20, t, { font: `400 17px ${FONT.mono}`, color: 'rgba(23,18,15,.8)', spacing: 3 });
-  yearCounter(g, t, false);
-  g.restore();
-}
-function neonLevel(t, on, seed) {
-  if (t < on) return 0;
-  const d = t - on, f = Math.floor(t * FPS);
-  let v = d > .55 ? (hash(f * 1.3 + seed * 7.7) < .012 ? .35 : 1) : (hash(f * 1.7 + seed) < .35 + d * 1.2 ? 1 : .06);
-  if (t > T.powerOff) v *= t < T.powerOff + .12 ? (hash(f + seed) < .5 ? 1.25 : .1) : 0;
-  return v;
-}
-function sceneNew(g, t, fi) {
-  g.save();
-  g.fillStyle = '#100c0b'; g.fillRect(-60, -60, W + 120, H + 120);
-  g.globalAlpha = .07; g.globalCompositeOperation = 'screen'; g.drawImage(A.paperA, 0, 0); g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
-  const L = A.neonLayer, lg = L.getContext('2d');
-  lg.setTransform(1, 0, 0, 1, 0, 0); lg.clearRect(0, 0, W, H);
-  cam(lg, W / 2, GY2, 1 + .045 * eio(prog(t, 20.85, 25.6)));
-  lg.lineCap = 'round'; lg.lineJoin = 'round';
-  const neonStroke = (lvl, w = 3.2) => {
-    if (lvl <= 0) return; lg.globalAlpha = Math.min(1, lvl);
-    lg.strokeStyle = COL.neon; lg.lineWidth = w; lg.stroke();
-    lg.strokeStyle = COL.neonCore; lg.lineWidth = w * .35; lg.stroke(); lg.globalAlpha = 1;
-  };
-  // moon
-  lg.beginPath(); lg.arc(985, 300, 105, 0, 7); neonStroke(neonLevel(t, 21.55, 3) * .5, 2.4);
-  lg.save(); cam(lg, 1180, GY2, .86);
-  NEON.forEach((e, i) => { e.draw(lg); neonStroke(neonLevel(t, e.on, i + 10) * (e.dim || 1)); });
-  lg.restore();
-  // the qipao as a neon sign
-  const qp = eout(prog(t, 22.6, 23.4)), ql = neonLevel(t, 22.6, 99);
-  strokePartial(lg, NEON_QIPAO, NEON_QIPAO.length * STEP * qp); neonStroke(ql, 3.4);
-  strokePartial(lg, NEON_PLACKET, NEON_PLACKET.length * STEP * prog(t, 23.2, 23.5)); neonStroke(ql, 2.4);
-  const sl = neonLevel(t, 23.0, 42);
-  if (sl > 0) {
-    lg.font = `900 108px ${FONT.serifTC}`; lg.textAlign = 'center'; lg.textBaseline = 'middle';
-    ['新', '中', '式'].forEach((ch, i) => {
-      lg.globalAlpha = Math.min(1, sl); lg.strokeStyle = COL.neon; lg.lineWidth = 3; lg.strokeText(ch, 470, 230 + i * 128);
-      lg.strokeStyle = COL.neonCore; lg.lineWidth = 1; lg.strokeText(ch, 470, 230 + i * 128);
-    });
-    lg.beginPath(); lg.roundRect(398, 158, 144, 400, 10); neonStroke(sl * .8, 2.4);
-    lg.font = `400 18px ${FONT.mono}`; lg.letterSpacing = '7px'; lg.globalAlpha = Math.min(1, sl) * .9; lg.fillStyle = COL.neon; lg.fillText('NEO-CHINESE', 474, 596); lg.letterSpacing = '0px';
-  }
-  lg.globalAlpha = 1;
-  // compose: wide glow, tight glow, core
-  g.globalCompositeOperation = 'lighter';
-  g.filter = 'blur(22px)'; g.globalAlpha = .9; g.drawImage(L, 0, 0);
-  g.filter = 'blur(6px)'; g.globalAlpha = .9; g.drawImage(L, 0, 0);
-  g.filter = 'none'; g.globalAlpha = 1; g.drawImage(L, 0, 0);
-  // reflection in the Huangpu
-  for (let k = 0; k < 46; k++) {
-    const y = GY2 + 6 + k * 6, src = GY2 - (k * 6 + 6) / .55, sx = Math.sin(t * 2.2 + k * .55) * (2 + k * .35);
-    g.globalAlpha = .34 * (1 - k / 50);
-    g.drawImage(L, 0, src - 6 / .55, W, 6 / .55, sx, y, W, 4.4);
-  }
-  g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
-  g.fillStyle = 'rgba(255,59,42,.35)'; g.fillRect(0, GY2, W, 1.5 * prog(t, 21.6, 22));
-  yearCounter(g, t, true);
-  if (t > T.powerOff + .12) { g.fillStyle = '#050403'; g.fillRect(-60, -60, W + 120, H + 120); }
-  g.restore();
-}
-function burnOverlay(g, t) {
-  const [a, peak, b] = T.burn;
-  const k = t < peak ? eio(prog(t, a, peak)) : 1 - eio(prog(t, peak, b));
-  if (k <= 0) return;
-  g.save(); g.globalCompositeOperation = 'lighter';
-  const blobs = [[1180, 520, 1.0], [640, 360, .8], [1560, 760, .7], [360, 840, .6], [980, 180, .55]];
-  blobs.forEach(([x, y, w], i) => {
-    const r = Math.max(1, k * 1300 * w * (.85 + .15 * Math.sin(t * 13 + i)));
-    const gr = g.createRadialGradient(x, y, 0, x, y, r);
-    gr.addColorStop(0, `rgba(255,248,225,${k})`); gr.addColorStop(.32, `rgba(255,190,90,${.9 * k})`);
-    gr.addColorStop(.65, `rgba(215,70,25,${.6 * k})`); gr.addColorStop(1, 'rgba(120,20,0,0)');
-    g.fillStyle = gr; g.fillRect(x - r, y - r, r * 2, r * 2);
-  });
-  g.fillStyle = `rgba(255,245,225,${Math.pow(k, 3) * .95})`; g.fillRect(-60, -60, W + 120, H + 120);
-  g.restore();
-}
-
-/* ---- 3. Title: letterpress + the seal ---- */
-function sceneTitle(g, t, fi) {
-  g.save();
-  // camera: shake from slams + impact, push to seal and back
-  let sx = 0, sy = 0;
-  T.slams.forEach((ti, i) => { if (t >= ti) { const d = t - ti, a = (i === 6 ? 9 : 5) * Math.exp(-d * 16); sx += a * Math.sin(d * 95); sy += a * Math.cos(d * 80); } });
-  if (t >= T.impact) { const d = t - T.impact, a = 16 * Math.exp(-d * 9); sx += a * Math.sin(d * 70); sy += a * Math.cos(d * 63); }
-  const S = TITLE.seal, scx = S.x + S.w / 2, scy = S.y + S.h / 2;
-  const push = eio(prog(t, T.approach[0], T.approach[1] - .3)) * (1 - eio(prog(t, T.impact + .35, T.impact + 2.6)));
-  const s = 1 + .25 * push;
-  g.translate(sx, sy);
-  const fx = Math.min(lerp(W / 2, scx, push), W - W / (2 * s)), fy = clamp(lerp(H / 2, scy, push), H / (2 * s), H - H / (2 * s));
-  g.translate(W / 2, H / 2); g.scale(s, s); g.translate(-fx, -fy);
-  const fade = prog(t, T.title, T.title + .6);
-  g.drawImage(A.paperC, 0, 0);
-  // ghost of the Bund
-  g.save(); g.globalCompositeOperation = 'multiply'; g.globalAlpha = .15 * prog(t, 35.0, 38.0); g.drawImage(A.bundGhost, 0, 50); g.restore();
-  // letters
-  TITLE.letters.forEach((L, i) => {
-    const ti = T.slams[i];
-    if (t >= ti) { g.save(); g.globalCompositeOperation = 'multiply'; const sq = 1 + .03 * Math.exp(-(t - ti) * 20);
-      g.translate(L.cx, L.cy); g.scale(sq, 1 / sq); g.translate(-L.cx, -L.cy); g.drawImage(L.canvas, L.x, L.y); g.restore(); }
-    // the metal sort coming down / lifting off
-    const down = prog(t, ti - .24, ti), up = prog(t, ti + .02, ti + .26);
-    if (down > 0 && up < 1) {
-      const k = t < ti ? 1 + .9 * (1 - ein(down)) : 1 + .7 * eout(up), a = Math.min(1, (t < ti ? down : 1 - up) * 2.2);
-      const bw = L.w + TITLE.track, bh = TITLE.size * .98;
-      g.save(); g.translate(L.cx, L.cy);
-      g.filter = `blur(${(k - 1) * 30 + 2}px)`; g.fillStyle = `rgba(20,12,8,${.35 * a})`; g.fillRect(-bw / 2 + (k - 1) * 60, -bh / 2 + (k - 1) * 70, bw, bh); g.filter = 'none';
-      g.scale(k, k); g.globalAlpha = a;
-      const mg = g.createLinearGradient(-bw / 2, -bh / 2, bw / 2, bh / 2); mg.addColorStop(0, '#5d5a55'); mg.addColorStop(.5, '#34312d'); mg.addColorStop(1, '#1d1b19');
-      g.fillStyle = mg; g.fillRect(-bw / 2, -bh / 2, bw, bh);
-      g.strokeStyle = 'rgba(255,255,255,.25)'; g.lineWidth = 2; g.beginPath(); g.moveTo(-bw / 2, bh / 2); g.lineTo(-bw / 2, -bh / 2); g.lineTo(bw / 2, -bh / 2); g.stroke();
-      g.strokeStyle = 'rgba(0,0,0,.5)'; g.beginPath(); g.moveTo(-bw / 2 + 6, bh / 2 - 22); g.lineTo(bw / 2 - 6, bh / 2 - 22); g.stroke();
-      g.restore();
-    }
-  });
-  // red thread underline
-  const ul = TITLE.right - TITLE.left + 40;
-  const upts = TITLE._under || (TITLE._under = resample([[TITLE.left - 20, TITLE.baseline + 58], [TITLE.right + 20, TITLE.baseline + 58]], STEP));
-  strokeStitches(g, upts, ul * prog(t, T.under[0], T.under[1]), 3.4);
-  // the seal
-  const ti = T.impact;
-  if (t >= ti) {
-    const u = prog(t, ti, ti + .5), sp = 1 + .025 * (1 - eout(u));
-    g.save(); g.translate(scx, scy); g.rotate(.025); g.scale(sp, sp);
-    g.globalCompositeOperation = 'multiply';
-    g.globalAlpha = .12; g.drawImage(A.sealBian, -A.sealBian.width / 2 + 3, -A.sealBian.height / 2 + 2);
-    g.globalAlpha = 1; g.drawImage(A.sealBian, -A.sealBian.width / 2, -A.sealBian.height / 2);
-    g.restore();
-    // paper dust puff
-    const d = t - ti; if (d < 1.2) {
-      const r = mulberry(88);
-      for (let i = 0; i < 60; i++) {
-        const ang = r() * Math.PI * 2, sp2 = 80 + r() * 260, dist = sp2 * (1 - Math.exp(-d * 4)) / 4 * 4;
-        const ex = scx + Math.cos(ang) * (S.w * .6 + dist), ey = scy + Math.sin(ang) * (S.h * .55 + dist);
-        g.fillStyle = r() < .5 ? `rgba(255,250,238,${.8 * (1 - d / 1.2)})` : `rgba(110,40,25,${.5 * (1 - d / 1.2)})`;
-        g.fillRect(ex, ey, 1.5 + r() * 2.5, 1.5 + r() * 2.5);
-      }
-    }
-  }
-  // approaching shadow + the stone
-  const ap = prog(t, T.approach[0] + .8, ti), lift = prog(t, ti + .05, ti + .6);
-  if ((ap > 0 && t < ti) || (t >= ti && lift < 1)) {
-    const k = t < ti ? 1 - eio(ap) : eout(lift);
-    g.save(); g.translate(scx, scy); g.rotate(.025);
-    g.filter = `blur(${4 + 60 * k}px)`; g.fillStyle = `rgba(25,12,8,${(t < ti ? ap : 1 - lift) * .6})`;
-    const sw = S.w * (1 + k * .6), sh = S.h * (1 + k * .6); g.fillRect(-sw / 2 + k * 70, -sh / 2 + k * 90, sw, sh); g.filter = 'none';
-    const near = t < ti ? prog(t, ti - .22, ti) : 1 - lift;
-    if (near > 0) {
-      const z = 1 + .35 * (t < ti ? 1 - near : lift);
-      g.scale(z, z); g.globalAlpha = Math.min(1, near * 3);
-      const sg = g.createLinearGradient(-S.w, -S.h, S.w, S.h); sg.addColorStop(0, '#7a6550'); sg.addColorStop(.5, '#4a3a2c'); sg.addColorStop(1, '#2a2019');
-      g.fillStyle = sg; g.beginPath(); g.roundRect(-S.w / 2 - 14, -S.h / 2 - 14, S.w + 28, S.h + 28, 10); g.fill();
-      g.strokeStyle = 'rgba(255,230,200,.18)'; g.lineWidth = 3; g.stroke();
-    }
-    g.restore();
-  }
-  if (t >= ti && t < ti + 1 / FPS * 2) { g.fillStyle = 'rgba(255,240,225,.35)'; g.fillRect(-100, -100, W + 200, H + 200); }
-  // subtitles
-  typeText(g, CN_LINE, TITLE.cx, TITLE.baseline + 136, T.cn, 11, t, { font: `400 36px ${FONT.serifTC}`, color: COL.ink, align: 'center', spacing: 16, cursor: false });
-  typeText(g, EN_LINE, TITLE.cx, TITLE.baseline + 190, T.en, 30, t, { font: `400 21px ${FONT.mono}`, color: 'rgba(23,18,15,.85)', align: 'center', spacing: 5 });
-  const ua = eout(prog(t, T.url, T.url + .9));
-  if (ua > 0) {
-    g.save(); g.globalAlpha = ua; g.font = `500 26px ${FONT.bodoni}`; g.letterSpacing = '12px'; g.fillStyle = COL.red; g.textAlign = 'center';
-    const y = TITLE.baseline + 282; g.fillText('BYMARGINS.COM', TITLE.cx + 6, y);
-    g.fillRect(TITLE.cx - 250 - 90 * ua, y - 9, 90 * ua, 1.5); g.fillRect(TITLE.cx + 250, y - 9, 90 * ua, 1.5);
-    g.restore();
-  }
-  g.restore();
-  if (fade < 1) { g.fillStyle = `rgba(5,4,3,${1 - fade})`; g.fillRect(-60, -60, W + 120, H + 120); }
-}
-
-/* =====================================================================
-   FRAME + FILM POST
-   ===================================================================== */
+/* ---------- picture ---------- */
 const cv = document.getElementById('c'), ctx = cv.getContext('2d');
 function renderFrame(tRaw) {
   const fi = Math.floor(tRaw * FPS + 1e-6), t = fi / FPS, g = ctx;
   g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.filter = 'none';
-  g.fillStyle = '#000'; g.fillRect(0, 0, W, H);
+  g.drawImage(A.paper, 0, 0);
   if (t >= DUR) return;
-  const runout = prog(t, T.runout, DUR);
-  // gate weave + overscan
-  const wx = Math.sin(t * 1.3) * 1.3 + (hash(fi) - .5) * 1.6 * (1 + runout * 3);
-  const wy = Math.sin(t * .9 + 1) * 1.6 + (hash(fi + 77) - .5) * 2 * (1 + runout * 3);
-  g.save(); g.translate(W / 2 + wx, H / 2 + wy); g.scale(1.014, 1.014); g.translate(-W / 2, -H / 2);
-  let bright = true;
-  if (t < T.leaderEnd) { sceneLeader(g, t, fi); bright = t < 3.6; }
-  else if (t < T.wipe[1]) {
-    sceneDraft(g, t, fi);
-    if (t > T.wipe[0]) {
-      const x = eio(prog(t, T.wipe[0], T.wipe[1])) * (W + 120) - 60;
-      g.save(); g.beginPath(); g.rect(-60, -60, x + 60, H + 120); g.clip(); sceneOld(g, t, fi); g.restore();
-      g.save(); g.lineCap = 'round'; g.strokeStyle = 'rgba(0,0,0,.2)'; g.lineWidth = 5; g.beginPath(); g.moveTo(x + 3, -60); g.quadraticCurveTo(x + 10, H / 2, x + 3, H + 60); g.stroke();
-      g.strokeStyle = '#a81d14'; g.lineWidth = 4; g.beginPath(); g.moveTo(x, -60); g.quadraticCurveTo(x + 8, H / 2, x, H + 60); g.stroke(); g.restore();
+  // a barely-there weave so the paper feels filmed rather than flat
+  g.save(); g.translate(Math.sin(t * 1.1) * .8, Math.sin(t * .8 + 1) * .8);
+
+  // 1. the thread
+  const da = 1 - eio(prog(t, T.draftOut[0], T.draftOut[1]));
+  if (da > 0) {
+    g.globalAlpha = da;
+    stitches(g, QIPAO, QIPAO_LEN * prog(t, T.sew[0], T.sew[1]));
+    stitches(g, PLACKET, PLACKET_LEN * prog(t, T.placket[0], T.placket[1]), 2.6);
+    T.frogs.forEach((ft, i) => frog(g, FROGS[i][0], FROGS[i][1], eout(prog(t, ft, ft + .5)) * da));
+    g.globalAlpha = 1;
+  }
+
+  // 2. Shanghai: the Bund, then Pudong, under one red sun
+  const city = prog(t, T.bundIn[0], T.bundIn[1]) * (1 - eio(prog(t, T.cityOut[0], T.cityOut[1])));
+  if (city > 0) {
+    const sunY = lerp(GY - 120, GY - 330, eout(prog(t, T.bundIn[0], 14)));
+    g.save(); g.beginPath(); g.rect(0, 0, W, GY); g.clip();
+    g.globalAlpha = .82 * city; g.fillStyle = COL.red; g.beginPath(); g.arc(1290, sunY, 150, 0, 7); g.fill(); g.restore();
+    // each skyline rises out of the river, the Bund sinks back before Pudong rises
+    const reveal = eout(prog(t, T.bundIn[0], T.bundIn[1] + .6));
+    const rise = (img, k) => { if (k <= 0) return; g.save(); g.beginPath(); g.rect(0, 0, W, GY + 3); g.clip();
+      g.globalAlpha = city; g.drawImage(img, 0, (1 - k) * 700); g.restore(); };
+    rise(A.bund, reveal * (1 - eio(prog(t, T.bundOut[0], T.bundOut[1]))));
+    rise(A.pudong, eio(prog(t, T.pudongIn[0], T.pudongIn[1])));
+    g.globalAlpha = .9 * city; g.fillStyle = COL.ink; g.fillRect(100, GY, W - 200, 2);
+    // a few soft lines on the water
+    g.fillStyle = COL.ink;
+    for (let k = 0; k < 9; k++) {
+      const y = GY + 22 + k * 16, a = .12 * (1 - k / 10) * city * reveal;
+      for (let s = 0; s < 6; s++) { const x = 220 + s * 260 + Math.sin(t * .6 + k + s) * 18 + hash(k * 7 + s) * 60, w = 70 + hash(k * 3 + s) * 120 - k * 6;
+        g.globalAlpha = a; g.fillRect(x, y, Math.max(20, w), 1.6); }
     }
+    g.globalAlpha = .22 * city; g.fillStyle = COL.red; for (let k = 0; k < 6; k++) g.fillRect(1290 - 110 + k * 16 + Math.sin(t + k) * 6, GY + 22 + k * 16, 220 - k * 32, 2);
+    g.globalAlpha = 1;
   }
-  else if (t < T.title) {
-    if (t < T.burn[1]) sceneOld(g, t, fi); else { sceneNew(g, t, fi); bright = false; }
-    burnOverlay(g, t);
+
+  // 3. title
+  if (t > T.letters - .1) {
+    const out = 1 - eio(prog(t, T.end[0], T.end[1]));
+    g.font = `400 176px ${SERIF}`; g.fillStyle = COL.ink; g.textBaseline = 'alphabetic';
+    TITLE.letters.forEach((L, i) => { const u = eout(prog(t, T.letters + i * .32, T.letters + i * .32 + 1.4));
+      g.globalAlpha = u * out; g.fillText(L.ch, L.x, TITLE.baseline + 10 * (1 - u)); });
+    const S = TITLE.seal;
+    if (t > T.seal - .7 && t < T.seal) { // a soft shadow as the seal comes down
+      const u = prog(t, T.seal - .7, T.seal); g.save(); g.filter = `blur(${lerp(30, 4, u)}px)`; g.globalAlpha = .18 * u * out; g.fillStyle = '#3a2a20';
+      g.fillRect(S.x + lerp(24, 2, u), S.y + lerp(28, 2, u), S.w, S.h); g.restore(); }
+    if (t >= T.seal) {
+      const u = eout(prog(t, T.seal, T.seal + .5)); g.save(); g.globalCompositeOperation = 'multiply'; g.globalAlpha = (.75 + .25 * u) * out;
+      g.drawImage(A.seal, S.x - 16, S.y - 16); g.restore(); }
+    g.textAlign = 'center';
+    g.globalAlpha = eout(prog(t, T.cn, T.cn + 1.2)) * out; g.font = `400 34px ${TC}`; g.letterSpacing = '12px'; g.fillStyle = COL.ink;
+    g.fillText('一部關於旗袍的紀錄片', TITLE.cx + 6, TITLE.baseline + 120);
+    g.globalAlpha = eout(prog(t, T.url, T.url + 1.2)) * out; g.font = `400 30px ${SERIF}`; g.letterSpacing = '3px'; g.fillStyle = COL.red;
+    g.fillText('bymargins.com', TITLE.cx, TITLE.baseline + 190);
+    g.letterSpacing = '0px'; g.textAlign = 'left'; g.globalAlpha = 1;
   }
-  else sceneTitle(g, t, fi);
   g.restore();
-  post(g, t, fi, bright, runout);
-}
-function post(g, t, fi, bright, runout) {
-  // flicker
-  const f = .03 * (hash(fi * 3.1) - .5) + .015 * Math.sin(t * 9) + runout * .12 * (hash(fi * 5.7) - .5);
-  g.fillStyle = f > 0 ? `rgba(255,248,235,${f})` : `rgba(0,0,0,${-f})`; g.fillRect(0, 0, W, H);
-  // vignette
-  g.globalCompositeOperation = 'multiply'; g.drawImage(A.vignette, 0, 0);
-  // grain
-  const tile = A.grain[fi % 4], pat = g.createPattern(tile, 'repeat');
+
+  // fine grain only
+  const pat = g.createPattern(A.grain[fi % 3], 'repeat');
   g.save(); g.translate(-(hash(fi * 1.9) * 512 | 0), -(hash(fi * 2.3) * 512 | 0));
-  g.globalCompositeOperation = 'overlay'; g.globalAlpha = .2; g.fillStyle = pat; g.fillRect(0, 0, W + 512, H + 512);
-  g.globalCompositeOperation = 'screen'; g.globalAlpha = bright ? .02 : .05; g.fillRect(0, 0, W + 512, H + 512);
-  g.restore();
+  g.globalCompositeOperation = 'soft-light'; g.globalAlpha = .22; g.fillStyle = pat; g.fillRect(0, 0, W + 512, H + 512); g.restore();
   g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
-  // dust + hairs
-  const n = Math.floor(hash(fi * 7.3) * (3.5 + runout * 10));
-  for (let i = 0; i < n; i++) {
-    const x = hash(fi * 13.1 + i) * W, y = hash(fi * 17.7 + i) * H, s = 1 + hash(fi * 3.3 + i) * 4;
-    g.fillStyle = bright ? 'rgba(20,14,10,.55)' : 'rgba(235,225,205,.45)';
-    g.beginPath(); g.ellipse(x, y, s, s * (.5 + hash(i + fi) * .8), hash(fi + i * 9) * 3, 0, 7); g.fill();
-  }
-  if (hash(fi * 9.91) < .06 + runout * .2) {
-    const x = hash(fi * 4.4) * W, y = hash(fi * 6.6) * H;
-    g.strokeStyle = bright ? 'rgba(20,14,10,.45)' : 'rgba(235,225,205,.35)'; g.lineWidth = 1.2;
-    g.beginPath(); g.moveTo(x, y); g.bezierCurveTo(x + 30, y - 40, x + 50, y + 30, x + 80 * hash(fi), y + 60); g.stroke();
-  }
-  // a wandering scratch
-  const sb = Math.floor(t * .7);
-  if (hash(sb + 5) < .45 || runout > .3) {
-    const x = 200 + hash(sb) * 1500 + Math.sin(t * 3) * 5;
-    g.fillStyle = bright ? 'rgba(255,250,240,.22)' : 'rgba(235,225,205,.16)'; g.fillRect(x, 0, 1.4, H);
-  }
-  // runout: burn to white, then black
-  if (t > 48.5) {
-    const k = prog(t, 48.5, 49.25);
-    g.fillStyle = `rgba(255,246,230,${eio(k) * .95})`; g.fillRect(0, 0, W, H);
-    if (t > 49.25) { g.fillStyle = hash(fi) < .25 && t < 49.6 ? 'rgba(160,30,20,.9)' : '#000'; g.fillRect(0, 0, W, H); }
-  }
+  // gentle fade in from paper
+  const fin = 1 - prog(t, 0, 1.0); if (fin > 0) { g.globalAlpha = fin; g.drawImage(A.paper, 0, 0); g.globalAlpha = 1; }
 }
 
-/* =====================================================================
-   SCORE — synthesized on the same timeline
-   ===================================================================== */
+/* ---------- sound ---------- */
 function buildAudio(ac, T0, OFFSET = 0) {
   const sr = ac.sampleRate, R = mulberry(2026);
   const at = s => Math.max(0, T0 + s), ok = s => s >= OFFSET - .02, now = () => ac.currentTime;
-  const startAt = (src, s) => src.start(Math.max(now(), at(s)));
-  const master = ac.createGain(); master.gain.value = .85;
-  const comp = ac.createDynamicsCompressor();
-  comp.threshold.value = -14; comp.knee.value = 8; comp.ratio.value = 4; comp.attack.value = .004; comp.release.value = .25;
-  master.connect(comp); comp.connect(ac.destination);
-  master.gain.setValueAtTime(.85, at(49.2)); master.gain.linearRampToValueAtTime(0, at(DUR));
-  // reverb
-  const ir = ac.createBuffer(2, Math.floor(sr * 3.4), sr);
-  for (let c = 0; c < 2; c++) { const d = ir.getChannelData(c); for (let i = 0; i < d.length; i++) d[i] = (R() * 2 - 1) * Math.pow(1 - i / d.length, 2.6); }
-  const rev = ac.createConvolver(); rev.buffer = ir; const revG = ac.createGain(); revG.gain.value = .55; rev.connect(revG); revG.connect(master);
+  const master = ac.createGain(); master.gain.setValueAtTime(2, at(0)); master.gain.setValueAtTime(2, at(T.end[0])); master.gain.linearRampToValueAtTime(0, at(DUR));
+  master.connect(ac.destination);
+  const ir = ac.createBuffer(2, Math.floor(sr * 3), sr);
+  for (let c = 0; c < 2; c++) { const d = ir.getChannelData(c); for (let i = 0; i < d.length; i++) d[i] = (R() * 2 - 1) * Math.pow(1 - i / d.length, 3); }
+  const rev = ac.createConvolver(); rev.buffer = ir; const rg = ac.createGain(); rg.gain.value = .45; rev.connect(rg); rg.connect(master);
   const dry = ac.createGain(); dry.connect(master);
-  const send = (node, amt) => { if (!amt) return; const s = ac.createGain(); s.gain.value = amt; node.connect(s); s.connect(rev); };
-  // noise
+  const send = (n, a) => { const s = ac.createGain(); s.gain.value = a; n.connect(s); s.connect(rev); };
   const WN = ac.createBuffer(1, sr * 2, sr); { const d = WN.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = R() * 2 - 1; }
 
-  function burst(s, { dur = .05, type = 'bandpass', f = 2000, q = 1, gain = .3, attack = .001, out = dry, rv = 0, f2 }) {
-    if (!ok(s)) return;
-    const src = ac.createBufferSource(); src.buffer = WN; const fl = ac.createBiquadFilter(); fl.type = type; fl.frequency.setValueAtTime(f, at(s)); fl.Q.value = q;
-    if (f2) fl.frequency.exponentialRampToValueAtTime(f2, at(s) + dur);
-    const g = ac.createGain(); g.gain.setValueAtTime(0, at(s)); g.gain.linearRampToValueAtTime(gain, at(s) + attack); g.gain.exponentialRampToValueAtTime(.0001, at(s) + dur);
-    src.connect(fl); fl.connect(g); g.connect(out); send(g, rv); src.start(at(s), R() * 1.5); src.stop(at(s) + dur + .05);
+  function burst(s, { dur = .05, type = 'bandpass', f = 2000, q = 1, gain = .2 }) {
+    if (!ok(s)) return; const src = ac.createBufferSource(); src.buffer = WN; const fl = ac.createBiquadFilter(); fl.type = type; fl.frequency.value = f; fl.Q.value = q;
+    const g = ac.createGain(); g.gain.setValueAtTime(gain, at(s)); g.gain.exponentialRampToValueAtTime(.0001, at(s) + dur);
+    src.connect(fl); fl.connect(g); g.connect(dry); src.start(at(s), R()); src.stop(at(s) + dur + .05);
   }
-  function tone(s, { f, f2, dur = .2, type = 'sine', gain = .2, attack = .002, out = dry, rv = 0 }) {
-    if (!ok(s)) return;
-    const o = ac.createOscillator(); o.type = type; o.frequency.setValueAtTime(f, at(s)); if (f2) o.frequency.exponentialRampToValueAtTime(f2, at(s) + dur * .8);
-    const g = ac.createGain(); g.gain.setValueAtTime(0, at(s)); g.gain.linearRampToValueAtTime(gain, at(s) + attack); g.gain.exponentialRampToValueAtTime(.0001, at(s) + dur);
-    o.connect(g); g.connect(out); send(g, rv); o.start(at(s)); o.stop(at(s) + dur + .05);
+  function tone(s, { f, f2, dur = .3, gain = .2, rv = 0 }) {
+    if (!ok(s)) return; const o = ac.createOscillator(); o.frequency.setValueAtTime(f, at(s)); if (f2) o.frequency.exponentialRampToValueAtTime(f2, at(s) + dur * .8);
+    const g = ac.createGain(); g.gain.setValueAtTime(0, at(s)); g.gain.linearRampToValueAtTime(gain, at(s) + .005); g.gain.exponentialRampToValueAtTime(.0001, at(s) + dur);
+    o.connect(g); g.connect(dry); if (rv) send(g, rv); o.start(at(s)); o.stop(at(s) + dur + .05);
   }
-  // Karplus–Strong plucked string (guzheng-ish)
-  const ksCache = {};
-  function ks(f) {
-    if (ksCache[f]) return ksCache[f];
-    const len = Math.floor(sr * 3.5), b = ac.createBuffer(1, len, sr), d = b.getChannelData(0), N = Math.max(2, Math.round(sr / f));
+  const cache = {};
+  function ks(f) { // Karplus–Strong plucked string
+    if (cache[f]) return cache[f];
+    const len = Math.floor(sr * 4), b = ac.createBuffer(1, len, sr), d = b.getChannelData(0), N = Math.max(2, Math.round(sr / f));
     const rr = mulberry(Math.round(f * 100)), buf = new Float32Array(N); let prev = 0;
-    for (let i = 0; i < N; i++) { buf[i] = .6 * (rr() * 2 - 1) + .4 * prev; prev = buf[i]; }
-    const decay = Math.pow(.5, 1 / (f * .85)); let idx = 0, peak = 0;
-    for (let i = 0; i < len; i++) { const a = buf[idx], c = buf[(idx + 1) % N]; d[i] = a; buf[idx] = decay * .5 * (a + c); idx = (idx + 1) % N; peak = Math.max(peak, Math.abs(a)); }
+    for (let i = 0; i < N; i++) { buf[i] = .5 * (rr() * 2 - 1) + .5 * prev; prev = buf[i]; }
+    const decay = Math.pow(.5, 1 / (f * 1.1)); let idx = 0, peak = 0;
+    for (let i = 0; i < len; i++) { const a = buf[idx]; d[i] = a; buf[idx] = decay * .5 * (a + buf[(idx + 1) % N]); idx = (idx + 1) % N; peak = Math.max(peak, Math.abs(a)); }
     for (let i = 0; i < len; i++) d[i] /= peak;
-    return (ksCache[f] = { b, rate: f * N / sr });
+    return (cache[f] = { b, rate: f * N / sr });
   }
-  function pluck(s, f, { gain = .3, out = dry, rv = .35, bend = 0 } = {}) {
-    if (!ok(s)) return;
-    const { b, rate } = ks(f), src = ac.createBufferSource(); src.buffer = b; src.playbackRate.setValueAtTime(rate, at(s));
-    if (bend) { src.playbackRate.setValueAtTime(rate, at(s) + .22); src.playbackRate.linearRampToValueAtTime(rate * Math.pow(2, bend / 12), at(s) + .42); }
-    const body = ac.createBiquadFilter(); body.type = 'peaking'; body.frequency.value = 1100; body.Q.value = 1.2; body.gain.value = 5;
-    const g = ac.createGain(); g.gain.value = gain; src.connect(body); body.connect(g); g.connect(out); send(g, rv); src.start(at(s)); src.stop(at(s) + 3.4);
+  function pluck(s, f, gain = .2, bend = 0) {
+    if (!ok(s)) return; const { b, rate } = ks(f), src = ac.createBufferSource(); src.buffer = b; src.playbackRate.setValueAtTime(rate, at(s));
+    if (bend) { src.playbackRate.setValueAtTime(rate, at(s) + .3); src.playbackRate.linearRampToValueAtTime(rate * Math.pow(2, bend / 12), at(s) + .55); }
+    const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3200;
+    const g = ac.createGain(); g.gain.value = gain; src.connect(lp); lp.connect(g); g.connect(dry); send(g, .5); src.start(at(s)); src.stop(at(s) + 3.9);
   }
-  function gong(s, f, gain) {
-    if (!ok(s)) return;
-    [[1, 1, 7], [2.02, .5, 5], [2.76, .38, 4.5], [3.53, .25, 3.5], [4.4, .18, 3], [5.2, .12, 2.4]].forEach(([r, a, d]) => {
-      const o = ac.createOscillator(); o.frequency.setValueAtTime(f * r * 1.012, at(s)); o.frequency.exponentialRampToValueAtTime(f * r, at(s) + 1.2);
-      const g = ac.createGain(); g.gain.setValueAtTime(0, at(s)); g.gain.linearRampToValueAtTime(gain * a, at(s) + .09); g.gain.exponentialRampToValueAtTime(.0001, at(s) + d);
-      o.connect(g); g.connect(dry); send(g, .6); o.start(at(s)); o.stop(at(s) + d + .1);
-    });
-  }
-  function drone(freqs, t0, t1, peak, attack, release, out = dry) {
-    if (t1 < OFFSET) return;
-    const g = ac.createGain(); g.gain.setValueAtTime(0, at(t0)); g.gain.linearRampToValueAtTime(peak, at(t0 + attack));
-    g.gain.setValueAtTime(peak, at(t1 - release)); g.gain.linearRampToValueAtTime(0, at(t1));
-    const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 900; lp.connect(g); g.connect(out); send(g, .45);
-    freqs.forEach((f, i) => [-4, 4].forEach(dc => {
-      const o = ac.createOscillator(); o.type = i % 2 ? 'sine' : 'triangle'; o.frequency.value = f; o.detune.value = dc;
-      const og = ac.createGain(); og.gain.value = 1 / (freqs.length * 2); o.connect(og); og.connect(lp); startAt(o, t0); o.stop(at(t1) + .1);
-    }));
-  }
-  function sewing(t0, t1, times, vol) {
-    if (t1 >= OFFSET) {
-      const o = ac.createOscillator(); o.type = 'sawtooth'; o.frequency.value = 108;
-      const bp = ac.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 420; bp.Q.value = 2.5;
-      const g = ac.createGain(); g.gain.setValueAtTime(0, at(t0 - .15)); g.gain.linearRampToValueAtTime(vol * .09, at(t0)); g.gain.setValueAtTime(vol * .09, at(t1)); g.gain.linearRampToValueAtTime(0, at(t1 + .2));
-      o.connect(bp); bp.connect(g); g.connect(dry); startAt(o, t0 - .15); o.stop(at(t1) + .3);
-    }
-    times.forEach(s => { burst(s, { dur: .025, f: 3200, q: 3, gain: vol * .28 }); tone(s, { f: 190, f2: 90, dur: .045, gain: vol * .22 }); });
-  }
+  const D = [146.83, 164.81, 185.0, 220.0, 246.94], n = deg => D[deg % 5] * Math.pow(2, Math.floor(deg / 5));
 
-  // --- projector bed (runs the whole piece) ---
-  {
-    const src = ac.createBufferSource(); src.buffer = WN; src.loop = true;
-    const bp = ac.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1700; bp.Q.value = .8;
-    const am = ac.createGain(); am.gain.value = .5;
-    const clat = ac.createOscillator(); clat.type = 'square'; clat.frequency.setValueAtTime(4, at(0)); clat.frequency.exponentialRampToValueAtTime(24, at(.9));
-    clat.frequency.setValueAtTime(24, at(48.2)); clat.frequency.exponentialRampToValueAtTime(5, at(DUR));
-    const depth = ac.createGain(); depth.gain.value = .5; clat.connect(depth); depth.connect(am.gain);
-    const vol = ac.createGain();
-    [[0, 0], [.6, .3], [4.2, .3], [5.0, .045], [25.25, .045], [25.6, .08], [26.3, .04], [46.5, .04], [47.6, .26], [DUR, .0]].forEach(([s, v], i) =>
-      i ? vol.gain.linearRampToValueAtTime(v, at(s)) : vol.gain.setValueAtTime(v, at(s)));
-    const hum = ac.createOscillator(); hum.type = 'sawtooth'; hum.frequency.value = 48; const hl = ac.createBiquadFilter(); hl.type = 'lowpass'; hl.frequency.value = 200;
-    const hg = ac.createGain(); hg.gain.value = .12; hum.connect(hl); hl.connect(hg); hg.connect(vol);
-    src.connect(bp); bp.connect(am); am.connect(vol); vol.connect(dry);
-    startAt(src, 0); startAt(clat, 0); startAt(hum, 0); [src, clat, hum].forEach(n => n.stop(at(DUR) + .1));
-  }
-  // --- vinyl / optical-track crackle ---
-  {
-    const len = sr * 6, b = ac.createBuffer(1, len, sr), d = b.getChannelData(0);
-    for (let i = 0; i < len; i++) { d[i] = (R() * 2 - 1) * .02; if (R() < .0007) { const a = (R() * 2 - 1) * .9; for (let k = 0; k < 30 && i + k < len; k++) d[i + k] += a * Math.exp(-k / 4); } }
-    const src = ac.createBufferSource(); src.buffer = b; src.loop = true; const hp = ac.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 900;
-    const g = ac.createGain();
-    [[0, .0], [.5, .22], [4.5, .12], [13.8, .3], [20.4, .12], [21.4, .03], [25.6, .1], [46, .1], [48, .3], [DUR, 0]].forEach(([s, v], i) =>
-      i ? g.gain.linearRampToValueAtTime(v, at(s)) : g.gain.setValueAtTime(v, at(s)));
-    src.connect(hp); hp.connect(g); g.connect(dry); startAt(src, 0); src.stop(at(DUR) + .1);
-  }
+  // room tone + a soft drone under everything
+  { const src = ac.createBufferSource(); src.buffer = WN; src.loop = true; const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 500;
+    const g = ac.createGain(); g.gain.value = .025; src.connect(lp); lp.connect(g); g.connect(dry); src.start(Math.max(now(), at(0))); src.stop(at(DUR)); }
+  { const g = ac.createGain(); g.gain.setValueAtTime(0, at(0)); g.gain.linearRampToValueAtTime(.05, at(4)); g.gain.setValueAtTime(.05, at(28)); g.gain.linearRampToValueAtTime(0, at(DUR));
+    g.connect(dry); send(g, .4);
+    [73.42, 110, 146.83].forEach(f => { const o = ac.createOscillator(); o.type = 'sine'; o.frequency.value = f; const og = ac.createGain(); og.gain.value = .33;
+      o.connect(og); og.connect(g); o.start(Math.max(now(), at(0))); o.stop(at(DUR)); }); }
 
-  // --- 0. leader ---
-  [.6, 1.6, 2.6].forEach(s => { burst(s, { dur: .03, f: 1400, q: 2, gain: .25 }); tone(s, { f: 330, dur: .08, gain: .06 }); });
-  tone(3.55, { f: 1000, dur: .042, gain: .26, attack: .001 }); // the 2-pop
-  tone(3.9, { f: 55, f2: 40, dur: 1.4, gain: .25, rv: .5 });
+  // the thread: a quiet hand-stitch, not a machine
+  const stitchAt = (len, a, b) => { for (let k = 1; k <= Math.floor(len / 18); k += 3) burst(a + (k * 18 / len) * (b - a), { dur: .03, f: 2400, q: 2, gain: .045 }); };
+  stitchAt(QIPAO_LEN, T.sew[0], T.sew[1]); stitchAt(PLACKET_LEN, T.placket[0], T.placket[1]);
+  [[1.2, n(5)], [3.6, n(7)], [6.0, n(8), 1]].forEach(([s, f, b]) => pluck(s, f, .14, b ? 1 : 0));
+  T.frogs.forEach((s, i) => pluck(s, n(10 + i), .07));
 
-  // --- 1. the draft ---
-  const D = [146.83, 164.81, 185.0, 220.0, 246.94]; // D pentatonic, octave 3
-  const n = (deg, oct = 1) => D[deg % 5] * Math.pow(2, Math.floor(deg / 5) + oct - 1);
-  drone([73.42, 110], 4.5, 13.6, .08, 2.5, .8);
-  [[5.0, n(5)], [6.7, n(8), 1], [8.4, n(7)], [9.9, n(6)], [11.2, n(10)], [12.2, n(9)]].forEach(([s, f, b]) => pluck(s, f, { gain: .22, bend: b ? 1 : 0, rv: .5 }));
-  sewing(T.sew[0], T.sew[1], stitchTimes(QIPAO_LEN, T.sew[0], T.sew[1]), .9);
-  sewing(T.placket[0], T.placket[1], stitchTimes(PLACKET_LEN, T.placket[0], T.placket[1]), .7);
-  T.frogs.forEach(s => { burst(s, { dur: .04, f: 2600, q: 4, gain: .18 }); pluck(s + .02, n(12), { gain: .05, rv: .2 }); });
-  { const s = T.miniSeal; tone(s, { f: 120, f2: 50, dur: .4, gain: .5, rv: .3 }); burst(s, { dur: .12, type: 'lowpass', f: 600, gain: .35 }); }
-  burst(T.wipe[0], { dur: .55, f: 500, f2: 5000, q: 2, gain: .25, attack: .3, rv: .2 });
+  // Shanghai: Jasmine Flower (茉莉花), plainly, on a plucked string
+  const mel = [[2, 2], [2, 1], [3, 1], [4, 1], [5, 1], [5, 1], [4, 1], [3, 2], [3, 1], [4, 1], [3, 4]];
+  { let s = 10.0; const e = .27; for (let rep = 0; rep < 2; rep++) for (const [deg, len] of mel) { pluck(s, n(deg + 5), .16); s += len * e; } }
+  [10.0, 12.16, 14.32, 16.48].forEach(s => pluck(s, 73.42, .12));
 
-  // --- 2a. Shanghai 1925: a radio playing Jasmine Flower ---
-  const radio = ac.createGain(); {
-    const hp = ac.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 380;
-    const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3000;
-    const pk = ac.createBiquadFilter(); pk.type = 'peaking'; pk.frequency.value = 1500; pk.gain.value = 6;
-    const ws = ac.createWaveShaper(); const curve = new Float32Array(1024); for (let i = 0; i < 1024; i++) { const x = i / 512 - 1; curve[i] = Math.tanh(x * 2.5); } ws.curve = curve;
-    const out = ac.createGain(); out.gain.setValueAtTime(.5, at(0)); out.gain.setValueAtTime(.5, at(20.3)); out.gain.linearRampToValueAtTime(0, at(20.9));
-    radio.connect(hp); hp.connect(lp); lp.connect(pk); pk.connect(ws); ws.connect(out); out.connect(dry); send(out, .15);
-  }
-  tone(13.75, { f: 2800, f2: 650, dur: .6, gain: .05, out: radio });
-  burst(13.7, { dur: .7, f: 1500, q: .6, gain: .25, out: radio, attack: .1 });
-  const mel = [[2, 2], [2, 1], [3, 1], [4, 1], [5, 1], [5, 1], [4, 1], [3, 2], [3, 1], [4, 1], [3, 4]]; // mi mi sol la do' do' la sol sol la sol
-  { const e = .19; let s = 14.3;
-    for (let rep = 0; rep < 2; rep++) for (const [deg, len] of mel) { pluck(s, n(deg + 5, 1), { gain: .13, out: radio, rv: 0 }); s += len * e; }
-    for (let k = 0; k < 8; k++) { pluck(14.3 + k * 4 * e, k % 2 ? 110 : 146.83, { gain: .09, out: radio, rv: 0 }); pluck(14.3 + k * 4 * e + 2 * e, n(5), { gain: .035, out: radio, rv: 0 }); }
-  }
-  // burn + odometer
-  burst(20.15, { dur: 1.3, f: 300, f2: 4500, q: 1.5, gain: .5, attack: .65, rv: .4 });
-  tone(20.85, { f: 90, f2: 30, dur: 1.6, gain: .55, rv: .5 });
-  { let last = 0; for (let i = 0; i <= 2000; i++) { const s = T.year[0] + (T.year[1] - T.year[0]) * i / 2000, v = Math.floor(101 * eio(i / 2000)); if (v > last) { burst(s, { dur: .01, type: 'highpass', f: 4000, gain: .1 }); last = v; } } }
-
-  // --- 2b. Shanghai 2026: neon + a beat under a guzheng ---
-  const buzz = ac.createGain(); {
-    const o = ac.createOscillator(); o.type = 'sawtooth'; o.frequency.value = 120; const bp = ac.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1100; bp.Q.value = 1.5;
-    o.connect(bp); bp.connect(buzz); buzz.connect(dry); buzz.gain.setValueAtTime(0, at(0));
-    const flick = (s, e) => { for (let x = s; x < e; x += 1 / 24) buzz.gain.setValueAtTime(hash(x * 91) < .55 ? .05 : 0, at(x)); };
-    flick(21.55, 22.1); buzz.gain.setValueAtTime(.035, at(22.1)); flick(22.6, 23.1); buzz.gain.setValueAtTime(.045, at(23.1));
-    flick(T.powerOff, T.powerOff + .12); buzz.gain.setValueAtTime(0, at(T.powerOff + .12));
-    startAt(o, 21.5); o.stop(at(25.5));
-  }
-  NEON.forEach(e => burst(e.on, { dur: .03, f: 5200, q: 3, gain: .08 }));
-  const delay = ac.createDelay(1); delay.delayTime.value = .45; const fb = ac.createGain(); fb.gain.value = .38; const wet = ac.createGain(); wet.gain.value = .45;
-  delay.connect(fb); fb.connect(delay); delay.connect(wet); wet.connect(dry);
-  const neoBus = ac.createGain(); neoBus.connect(dry); neoBus.connect(delay);
-  for (let s = 21.8; s < 25.15; s += .6) { tone(s, { f: 150, f2: 42, dur: .5, gain: .75 }); burst(s + .3, { dur: .04, type: 'highpass', f: 7000, gain: .07 }); }
-  for (let s = 23.0; s < 25.15; s += 1.2) burst(s + .6, { dur: .14, f: 1800, q: .8, gain: .16, rv: .3 });
-  drone([36.71, 73.42], 21.6, 25.25, .22, .4, .05);
-  [[22.4, n(10)], [22.7, n(8)], [23.0, n(9)], [23.6, n(7), 1], [24.2, n(11)], [24.5, n(10)], [24.8, n(8)]].forEach(([s, f, b]) => pluck(s, f, { gain: .3, out: neoBus, rv: .25, bend: b ? 2 : 0 }));
-  tone(T.powerOff, { f: 95, f2: 28, dur: .45, gain: .6 }); burst(T.powerOff, { dur: .2, f: 900, f2: 120, q: 1, gain: .3 });
-
-  // --- 3. title ---
-  T.slams.forEach((s, i) => {
-    const big = i === 6 ? 1.35 : 1;
-    burst(s - .12, { dur: .14, f: 900, f2: 2500, q: .8, gain: .05, attack: .1 });
-    burst(s, { dur: .07, f: 2200, q: 1.2, gain: .5 * big, rv: .25 });
-    tone(s, { f: 125, f2: 52, dur: .26, gain: .7 * big, rv: .2 });
-    tone(s, { f: 1870 + i * 37, dur: .35, gain: .035 }); tone(s, { f: 2730 - i * 23, dur: .25, gain: .025 });
-  });
-  drone([73.42, 110, 146.83], 26.2, 33.82, .1, 2.5, .08);
-  sewing(T.under[0], T.under[1], stitchTimes(TITLE.right - TITLE.left + 40, T.under[0], T.under[1]), .6);
-  if (ok(31.2) || OFFSET < 33.8) {
-    const src = ac.createBufferSource(); src.buffer = WN; src.loop = true; const bp = ac.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 2;
-    bp.frequency.setValueAtTime(200, at(31.2)); bp.frequency.exponentialRampToValueAtTime(2600, at(33.8));
-    const g = ac.createGain(); g.gain.setValueAtTime(.0001, at(31.2)); g.gain.exponentialRampToValueAtTime(.28, at(33.78)); g.gain.linearRampToValueAtTime(0, at(33.83));
-    src.connect(bp); bp.connect(g); g.connect(dry); send(g, .3); startAt(src, 31.2); src.stop(at(33.9));
-    const o = ac.createOscillator(); o.frequency.setValueAtTime(220, at(31.2)); o.frequency.exponentialRampToValueAtTime(440, at(33.8));
-    const og = ac.createGain(); og.gain.setValueAtTime(0, at(31.2)); og.gain.linearRampToValueAtTime(.03, at(33.75)); og.gain.linearRampToValueAtTime(0, at(33.82));
-    o.connect(og); og.connect(dry); startAt(o, 31.2); o.stop(at(33.9));
-  }
-  { const s = T.impact;
-    tone(s, { f: 62, f2: 30, dur: 3.2, gain: 1.0, rv: .5 });
-    burst(s, { dur: .55, type: 'lowpass', f: 260, gain: .95, rv: .4 });
-    burst(s, { dur: .12, f: 650, q: 1.5, gain: .55, rv: .5 });
-    gong(s + .03, 73.42, .32);
-  }
-  drone([73.42, 110, 146.83, 185, 220], 34.3, 49.6, .085, 2.8, 2.5);
-  [...CN_LINE].forEach((c, i) => { const s = T.cn + i / 11; burst(s, { dur: .014, type: 'highpass', f: 2500, gain: .12 }); tone(s, { f: 160, f2: 90, dur: .03, gain: .12 }); });
-  [...EN_LINE].forEach((c, i) => { if (c !== ' ') burst(T.en + i / 30, { dur: .012, type: 'highpass', f: 2800, gain: .08 }); });
-  tone(T.en + EN_LINE.length / 30 + .1, { f: 2093, dur: 1.2, gain: .05, rv: .3 });
-  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(i => pluck(T.url - .3 + i * .055, n(5 + i), { gain: .1 + i * .015, rv: .5 }));
-  pluck(T.url + .35, n(10), { gain: .32, rv: .6, bend: 1 }); pluck(T.url + .35, n(5), { gain: .2, rv: .6 });
-  pluck(43.5, 73.42, { gain: .25, rv: .7 });
-  // runout: the tail of the film slapping the reel
-  { let s = 48.4, iv = .045; while (s < DUR) { burst(s, { dur: .02, f: 1200, q: 1, gain: .22 }); tone(s, { f: 210, dur: .03, gain: .1 }); s += iv; iv *= 1.07; } }
-  return master;
+  // title
+  pluck(T.letters, n(0) / 2, .16);
+  { const s = T.seal; tone(s, { f: 90, f2: 45, dur: .5, gain: .35, rv: .2 }); burst(s, { dur: .18, type: 'lowpass', f: 400, gain: .25 }); }
+  pluck(T.seal + .5, n(10), .16, 1); pluck(T.seal + .5, n(5), .1);
+  pluck(T.url, n(12), .08);
 }
 function wavBase64(buf) {
-  const ch = buf.numberOfChannels, len = buf.length, sr = buf.sampleRate, bytes = 44 + len * ch * 2;
-  const ab = new ArrayBuffer(bytes), v = new DataView(ab); let p = 0;
+  const ch = buf.numberOfChannels, len = buf.length, bytes = 44 + len * ch * 2, ab = new ArrayBuffer(bytes), v = new DataView(ab); let p = 0;
   const str = s => { for (const c of s) v.setUint8(p++, c.charCodeAt(0)); }, u32 = x => { v.setUint32(p, x, true); p += 4; }, u16 = x => { v.setUint16(p, x, true); p += 2; };
-  str('RIFF'); u32(bytes - 8); str('WAVE'); str('fmt '); u32(16); u16(1); u16(ch); u32(sr); u32(sr * ch * 2); u16(ch * 2); u16(16); str('data'); u32(len * ch * 2);
+  str('RIFF'); u32(bytes - 8); str('WAVE'); str('fmt '); u32(16); u16(1); u16(ch); u32(buf.sampleRate); u32(buf.sampleRate * ch * 2); u16(ch * 2); u16(16); str('data'); u32(len * ch * 2);
   const data = []; for (let c = 0; c < ch; c++) data.push(buf.getChannelData(c));
   for (let i = 0; i < len; i++) for (let c = 0; c < ch; c++) { const s = Math.max(-1, Math.min(1, data[c][i])); v.setInt16(p, s < 0 ? s * 0x8000 : s * 0x7fff, true); p += 2; }
   let bin = ''; const u8 = new Uint8Array(ab); for (let i = 0; i < u8.length; i += 0x8000) bin += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000));
   return btoa(bin);
 }
 
-/* =====================================================================
-   PLAYER
-   ===================================================================== */
+/* ---------- player ---------- */
 const isRender = new URLSearchParams(location.search).has('render');
 if (isRender) document.body.classList.add('render');
 const ready = (async () => { await loadFonts(); buildAssets(); })();
-window.MARGINS = {
-  ready, renderFrame, DUR, FPS,
-  async renderAudio() { const sr = 48000, oc = new OfflineAudioContext(2, Math.ceil(sr * DUR), sr); buildAudio(oc, 0, 0); return wavBase64(await oc.startRendering()); },
-};
+window.MARGINS = { ready, renderFrame, DUR, FPS,
+  async renderAudio() { const sr = 48000, oc = new OfflineAudioContext(2, Math.ceil(sr * DUR), sr); buildAudio(oc, 0, 0); return wavBase64(await oc.startRendering()); } };
 if (!isRender) {
   let ac = null, T0 = 0, playing = false, paused = false;
-  const overlay = document.getElementById('overlay'), timeEl = document.getElementById('time'), pauseBtn = document.getElementById('pause');
+  const overlay = document.getElementById('overlay'), pauseBtn = document.getElementById('pause');
   async function play(from = 0) {
-    await ready;
-    if (ac) { try { await ac.close(); } catch (e) {} }
-    ac = new (window.AudioContext || window.webkitAudioContext)();
-    await ac.resume();
+    await ready; if (ac) { try { await ac.close(); } catch (e) {} }
+    ac = new (window.AudioContext || window.webkitAudioContext)(); await ac.resume();
     T0 = ac.currentTime + .08 - from; buildAudio(ac, T0, from);
-    playing = true; paused = false; pauseBtn.textContent = 'PAUSE'; overlay.classList.add('hidden');
+    playing = true; paused = false; pauseBtn.textContent = 'Pause'; overlay.classList.add('hidden');
   }
   overlay.addEventListener('click', () => play(0));
   overlay.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(0); } });
   document.querySelectorAll('#controls [data-t]').forEach(b => b.addEventListener('click', () => play(parseFloat(b.dataset.t))));
   pauseBtn.addEventListener('click', async () => {
     if (!ac || !playing) return play(0);
-    if (paused) { await ac.resume(); paused = false; pauseBtn.textContent = 'PAUSE'; } else { await ac.suspend(); paused = true; pauseBtn.textContent = 'RESUME'; }
+    if (paused) { await ac.resume(); paused = false; pauseBtn.textContent = 'Pause'; } else { await ac.suspend(); paused = true; pauseBtn.textContent = 'Resume'; }
   });
-  document.addEventListener('keydown', e => { if (e.key === ' ' && overlay.classList.contains('hidden')) { e.preventDefault(); pauseBtn.click(); } });
-  ready.then(() => { document.getElementById('loading').textContent = 'MARGINS · 邊緣 · OPENING TITLES'; renderFrame(42); });
+  ready.then(() => renderFrame(28));
   (function loop() {
     requestAnimationFrame(loop);
-    if (!playing || !A.paperA) return;
+    if (!playing || !A.paper) return;
     const t = ac.currentTime - T0;
-    if (t >= DUR) { playing = false; renderFrame(42); overlay.classList.remove('hidden'); document.querySelector('.play-label').textContent = 'PLAY AGAIN'; return; }
-    renderFrame(Math.max(0, t)); timeEl.textContent = Math.max(0, t).toFixed(1).padStart(4, '0');
+    if (t >= DUR) { playing = false; renderFrame(28); overlay.classList.remove('hidden'); return; }
+    renderFrame(Math.max(0, t));
   })();
 }
 </script>
